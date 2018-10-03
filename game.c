@@ -1,6 +1,7 @@
 #include "system.h"
 #include "pio.h"
 #include "navswitch.h"
+#include "ledmat.h"
 #include <stdbool.h>
 
 
@@ -23,26 +24,32 @@ static const pio_t ledmat_cols[] =
 
 int main (void)
 {
+    // Initialise system and set inital dot positions
     system_init ();
     navswitch_init ();
-    int dot[2] = {4, 3};
+    ledmat_init ();
+    int dot[2] = {3, 2};
     int prev_dot[2] = {0, 0};
     bool changed = false;
+    
+    pio_output_low(ledmat_rows[dot[0]]);
+    pio_output_low(ledmat_cols[dot[1]]);
 
     while (1)
     {
         navswitch_update();
         
-        if (navswitch_push_event_p(NAVSWITCH_NORTH)) {
-            if (dot[0] < 7) {
+        // Check for button press events and change dot position
+        if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
+            if (dot[0] < 6) {
                 prev_dot[0] = dot[0];
                 changed = true;
                 dot[0]++;
             }
         }
         
-        if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
-            if (dot[0] > 1) {
+        if (navswitch_push_event_p(NAVSWITCH_NORTH)) {
+            if (dot[0] > 0) {
                 prev_dot[0] = dot[0];
                 changed = true;
                 dot[0]--;
@@ -50,7 +57,7 @@ int main (void)
         }
         
         if (navswitch_push_event_p(NAVSWITCH_EAST)) {
-            if (dot[1] < 7) {
+            if (dot[1] < 4) {
                 prev_dot[1] = dot[1];
                 changed = true;
                 dot[1]++;
@@ -58,13 +65,15 @@ int main (void)
         }
         
         if (navswitch_push_event_p(NAVSWITCH_WEST)) {
-            if (dot[1] > 1) {
+            if (dot[1] > 0) {
                 prev_dot[1] = dot[1];
                 changed = true;
                 dot[1]--;
             }
         }
-            
+        
+        
+        // Update LED display
         if (changed) {
             pio_output_low(ledmat_rows[dot[0]]);
             pio_output_low(ledmat_cols[dot[1]]);
