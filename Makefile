@@ -1,11 +1,11 @@
 # File:   Makefile
-# Author: M. P. Hayes, UCECE
-# Date:   12 Sep 2010
+# Author: Zeb Barry
+# Date:   8 October 2018
 # Descr:  Makefile for game
 
 # Definitions.
 CC = avr-gcc
-CFLAGS = -mmcu=atmega32u2 -Os -Wall -Wstrict-prototypes -Wextra -g -I. -I../../utils -I../../fonts -I../../drivers -I../../drivers/avr
+CFLAGS = -mmcu=atmega32u2 -Os -Wall -Wstrict-prototypes -Wextra -g -I. -I../../utils -I../../fonts -I../../drivers -I../../drivers/avr -Imodules
 OBJCOPY = avr-objcopy
 SIZE = avr-size
 DEL = rm
@@ -31,10 +31,12 @@ ledmat.o: modules/ledmat.c ../../drivers/avr/pio.h ../../drivers/avr/system.h mo
 navswitch.o: ../../drivers/navswitch.c ../../drivers/avr/delay.h ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/navswitch.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
+paddle.o: modules/paddle.c ../../drivers/avr/pio.h modules/ledmat.h ../../drivers/avr/system.h modules/paddle.h
+	$(CC) -c $(CFLAGS) $< -o $@
 
 
 # Link: create ELF output file from object files.
-game.out: game.o pio.o system.o ledmat.o navswitch.o
+game.out: game.o pio.o system.o ledmat.o navswitch.o paddle.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
