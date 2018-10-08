@@ -11,7 +11,7 @@
 #include "paddle.h"
 #include <stdbool.h>
 
-typedef struct paddle_s Paddle;
+
 
 /** Define PIO pins driving LED matrix rows.  */
 static const pio_t ledmat_rows[] =
@@ -29,27 +29,23 @@ static const pio_t ledmat_cols[] =
     LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
 };
 
-struct paddle_s
-{
-    int rows[2];
-    int col;
-    int prev_rows[2];
-    int prev_col;
-    bool moved;
-    
-};
 
+
+// Initialise the paddle and turn on the respective leds.
 void paddle_init (Paddle* paddle)
 {
     paddle->rows[0] = 3;
     paddle->rows[1] = 4;
-    paddle->col = 3;
+    paddle->col = 4;
     paddle->moved = false;
     pio_output_low(ledmat_rows[paddle->rows[0]]);
     pio_output_low(ledmat_rows[paddle->rows[1]]);
     pio_output_low(ledmat_cols[paddle->col]);
 }
 
+
+
+// Move the paddles location up and down the display.
 void increase_row (Paddle* paddle)
 {
     if (paddle->rows[1] < 6) {
@@ -62,7 +58,6 @@ void increase_row (Paddle* paddle)
 }
 
 
-
 void decrease_row (Paddle* paddle)
 {
     if (paddle->rows[0] > 0) {
@@ -73,7 +68,6 @@ void decrease_row (Paddle* paddle)
         paddle->rows[1]--;
     }
 }
-
 
 
 void increase_col (Paddle* paddle)
@@ -96,6 +90,7 @@ void decrease_col (Paddle* paddle)
 }
 
 
+// Update the led display to show the new paddle location
 void paddle_update(Paddle* paddle)
 {
     if (paddle->moved) {    
