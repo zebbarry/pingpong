@@ -12,9 +12,6 @@
 
 #include "system.h"
 
-/** Initialise PIO pins to drive LED matrix.  */
-void ledmat_init (void);
-
 
 /** Define PIO pins driving LED matrix rows.  */
 static const pio_t ledmat_rows[];
@@ -22,6 +19,10 @@ static const pio_t ledmat_rows[];
 
 /** Define PIO pins driving LED matrix columns.  */
 static const pio_t ledmat_cols[];
+
+
+/** Initialise PIO pins to drive LED matrix.  */
+void ledmat_init (void);
 
 
 /** Display pattern on specified column.

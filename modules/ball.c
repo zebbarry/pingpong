@@ -13,7 +13,6 @@
 #include <stdio.h>
 
 
-
 /** Define PIO pins driving LED matrix rows.  */
 static const pio_t ledmat_rows[] =
 {
@@ -31,9 +30,15 @@ static const pio_t ledmat_cols[] =
 };
 
 
+
 void ball_init (Ball* ball)
 {
     ball->state = true;
+    ball->row = 3;
+    ball->col = 2;
+    ball->prev_row = 0;
+    ball->prev_col = 0;
+    ball->moved = false;
     pio_output_low(ledmat_rows[ball->row]);
     pio_output_low(ledmat_cols[ball->col]);
 }
@@ -97,5 +102,22 @@ void ball_update(Ball* ball)
         pio_output_high(ledmat_cols[ball->col]);
     }
         
+}
+
+
+void ball_off(Ball* ball)
+{
+    pio_output_high(ledmat_rows[ball->row]);
+    pio_output_high(ledmat_cols[ball->col]);
+}
+
+
+
+void ball_on(Ball* ball)
+{
+    if (ball->state) {
+        pio_output_low(ledmat_rows[ball->row]);
+        pio_output_low(ledmat_cols[ball->col]);
+    }
 }
 

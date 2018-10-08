@@ -97,10 +97,26 @@ void paddle_update(Paddle* paddle)
         pio_output_high(ledmat_cols[paddle->prev_col]);
         pio_output_high(ledmat_rows[paddle->prev_rows[0]]);
         pio_output_high(ledmat_rows[paddle->prev_rows[1]]);
-        pio_output_low(ledmat_cols[paddle->col]);
-        pio_output_low(ledmat_rows[paddle->rows[0]]);
-        pio_output_low(ledmat_rows[paddle->rows[1]]);
         paddle->moved = false;
     }
+    
+    pio_output_low(ledmat_cols[paddle->col]);
+    pio_output_low(ledmat_rows[paddle->rows[0]]);
+    pio_output_low(ledmat_rows[paddle->rows[1]]);
 }
 
+
+void paddle_on(Paddle* paddle)
+{    
+    pio_output_low(ledmat_rows[paddle->rows[0]]);
+    pio_output_low(ledmat_rows[paddle->rows[1]]);
+    pio_output_low(ledmat_cols[paddle->col]);
+}
+
+
+void paddle_off(Paddle* paddle)
+{    
+    pio_output_high(ledmat_rows[paddle->rows[0]]);
+    pio_output_high(ledmat_rows[paddle->rows[1]]);
+    pio_output_high(ledmat_cols[paddle->col]);
+}

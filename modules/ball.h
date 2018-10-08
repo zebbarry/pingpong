@@ -31,4 +31,8 @@ void decrease_col_ball (Ball* ball);
 
 void ball_update (Ball* ball);
 
+void ball_off(Ball* ball);
+
+void ball_on(Ball* ball);
+
 #endif
