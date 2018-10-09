@@ -17,6 +17,7 @@ struct ball_s
     int col;
     int prev_row;
     int prev_col;
+    int movement_dir;
     bool moved;
     bool state;
 };
