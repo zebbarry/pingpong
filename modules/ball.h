@@ -17,6 +17,7 @@ struct ball_s
     int col;
     int prev_row;
     int prev_col;
+    int movement_dir;
     int angle; // Angle - 0 = 45 left, 1 = straight, 2 = 45 right
     bool moved;
     bool state; // Turns on or off the ball.
