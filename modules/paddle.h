@@ -1,4 +1,4 @@
-/** @file paddle.c
+/** @file paddle.h
  *  @author Zeb Barry
  *  @date 8 October 2018
  *  @brief Paddle class header
@@ -18,7 +18,7 @@ struct paddle_s
     int prev_rows[2];
     int prev_col;
     bool moved;
-    
+
 };
 
 void paddle_init (Paddle* paddle);
