@@ -7,7 +7,7 @@
 #include "paddle.h"
 #include "ball.h"
 #include "transfer.h"
-#include "modules/text.h"
+#include "text.h"
 
 
 #define BALL_REFRESH 100
