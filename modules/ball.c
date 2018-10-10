@@ -29,15 +29,28 @@ void ball_init (Ball* ball)
 }
 
 
+void check_wall_collision(Ball* ball)
+{
+    if (ball->row == 1) {       // Righthand wall
+        ball->angle = 0;
+    } else if (ball->row == 7) {
+        ball->angle = 2;        // Lefthand wall
+    }
+}
+
 // Move the ball one step.
 void move_ball (Ball* ball)
 {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;
-    ball->col++;
-    if (ball->movement_dir > 0) {
+    if (ball->movement_dir == -1) {
+        ball->col--;
+    } else if (ball->angle == 1) {
+        ball->col++;
+    }
+    if (ball->angle == 0) {
         ball->row++;
-    } else if (ball->movement_dir < 0) {
+    } else if (ball->angle == 2) {
         ball->row--;
     }
     ball->moved = true;
