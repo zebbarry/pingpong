@@ -9,6 +9,7 @@
 #include "pio.h"
 #include "modules/ledmat.h"
 #include "ball.h"
+#include "paddle.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -47,8 +48,22 @@ void check_end_collision(Ball* ball)
     }
 }
 
+void check_paddle_collision(Ball* ball, Paddle* paddle)
+{
+    if (ball->row == paddle->rows[1] - 1) {
+        ball->angle = 2;
+        ball->movement_dir = -1;
+    } else if (ball->row == paddle->rows[1]) {
+        ball->angle = 1;
+        ball->movement_dir = -1;
+    } else if (ball->row == paddle->rows[1] + 1) {
+        ball->angle = 0;
+        ball->movement_dir = -1;
+    }
+}
+
 // Move the ball one step.
-void move_ball (Ball* ball)
+void move_ball (Ball* ball, Paddle* paddle)
 {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;
@@ -61,6 +76,9 @@ void move_ball (Ball* ball)
         ball->row++;
     } else if (ball->angle == 2) {
         ball->row--;
+    }
+    if (ball->col == 3 && ball->movement_dir == 1) {
+        check_paddle_collision(ball, paddle);
     }
     check_wall_collision(ball);
     check_end_collision(ball);

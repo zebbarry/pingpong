@@ -48,9 +48,10 @@ static void ball_display_task (void *data)
 static void ball_move_task (void *data)
 {
     Game* game = data;
+    Paddle* player = game->paddle;
     Ball* ball = game->ball;
 
-    move_ball(ball);
+    move_ball(ball, player);
 }
 
 
