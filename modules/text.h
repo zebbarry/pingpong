@@ -25,7 +25,7 @@ struct game_s
 
 void score_init(int update_rate);
 
-void show_score(Game* game);
+bool show_score(Game* game);
 
 void show_win(Game* game);
 

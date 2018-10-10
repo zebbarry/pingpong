@@ -53,23 +53,43 @@ void send_ball(Ball* ball)
     }
 }
 
-
-void wait_for_reply(Game* game)
+// 0 for noreply, 1 for ball, 2 for score.
+int wait_for_reply(Game* game)
 {
     Ball* ball = game->ball;
     char reply;
+    int result = 0;
 
     if (ir_uart_read_ready_p()) {
         reply = ir_uart_getc();
 
         if (reply == 'B') {
+            result = 1;
+            while (!ir_uart_read_ready_p()) {
+                continue;
+            }
             ball->row = ir_uart_getc();
+            while (!ir_uart_read_ready_p()) {
+                continue;
+            }
             ball->col = ir_uart_getc();
+            while (!ir_uart_read_ready_p()) {
+                continue;
+            }
             ball->angle = ir_uart_getc();
 
         } else if (reply == 'S') {
+            result = 2;
+            while (!ir_uart_read_ready_p()) {
+                continue;
+            }
             game->your_score = ir_uart_getc();
+            while (!ir_uart_read_ready_p()) {
+                continue;
+            }
             game->their_score = ir_uart_getc();
         }
     }
+
+    return result;
 }

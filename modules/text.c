@@ -13,13 +13,16 @@
 #include "tinygl.h"
 #include "../fonts/font3x5_1.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 
 #define MESSAGE_RATE 10
 
+static int REFRESH_RATE = 0;
 
 void score_init(int update_rate)
 {
+    REFRESH_RATE = update_rate;
     tinygl_init (update_rate);
     tinygl_font_set (&font3x5_1);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_STEP);
@@ -27,19 +30,41 @@ void score_init(int update_rate)
 }
 
 
-void show_score(Game* game)
+bool show_score(Game* game)
 {
-    tinygl_clear();
-    char score[3];
-    sprintf(score, "%d%d", game->your_score, game->their_score);
-    score[2] = '\0';
-    tinygl_text (score);
-    tinygl_update();
+    bool finished = false;
+    static int counter = 0;
+    Ball* ball = game->ball;
+    Paddle* paddle = game->paddle;
+    if (counter == 0) {
+        game->show_text = true;
+        paddle->state = false;
+        ball->state = false;
+        tinygl_clear();
+        char score[3];
+        sprintf(score, "%d%d", game->your_score, game->their_score);
+        score[2] = '\0';
+        tinygl_text (score);
+    } else {
+        counter++;
+        // If five seconds have passed
+        if (counter == (5 * REFRESH_RATE)) {
+            finished = true;
+            counter = 0;
+            game->show_text = false;
+            text_clear();
+            ball_on(ball);
+            paddle_on(paddle);
+        }
+    }
+
+    return finished;
 }
 
 
 void show_win(Game* game)
 {
+    game->show_text = true;
     tinygl_clear();
     tinygl_text_speed_set(MESSAGE_RATE);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);
@@ -54,6 +79,7 @@ void show_win(Game* game)
 
 void show_loss(Game* game)
 {
+    game->show_text = true;
     tinygl_clear();
     tinygl_text_speed_set(MESSAGE_RATE);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);

@@ -21,6 +21,7 @@ void paddle_init (Paddle* paddle)
     paddle->rows[2] = 4;
     paddle->col = 4;
     paddle->moved = false;
+    paddle->state = true;
 }
 
 
@@ -77,18 +78,18 @@ void decrease_col (Paddle* paddle)
 // Update the led display to show the new paddle location
 void paddle_update(Paddle* paddle)
 {
-    if (paddle->moved) {
-        pio_output_high(ledmat_cols[paddle->prev_col]);
-        pio_output_high(ledmat_rows[paddle->prev_rows[0]]);
-        pio_output_high(ledmat_rows[paddle->prev_rows[1]]);
-        pio_output_high(ledmat_rows[paddle->prev_rows[2]]);
-        paddle->moved = false;
+    if (paddle->state) {
+        if (paddle->moved) {
+            pio_output_high(ledmat_cols[paddle->prev_col]);
+            pio_output_high(ledmat_rows[paddle->prev_rows[0]]);
+            pio_output_high(ledmat_rows[paddle->prev_rows[1]]);
+            pio_output_high(ledmat_rows[paddle->prev_rows[2]]);
+            paddle->moved = false;
+        }
+        paddle_on(paddle);
+    } else {
+        paddle_off(paddle);
     }
-
-    pio_output_low(ledmat_cols[paddle->col]);
-    pio_output_low(ledmat_rows[paddle->rows[0]]);
-    pio_output_low(ledmat_rows[paddle->rows[1]]);
-    pio_output_low(ledmat_rows[paddle->rows[2]]);
 }
 
 

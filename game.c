@@ -14,7 +14,7 @@
 #define BALL_REFRESH 100
 #define PADDLE_REFRESH 100
 #define SWITCH_REFRESH 100
-#define TEXT_REFRESH 250
+#define GAME_UPDATE 250
 
 static bool alternate = false;
 
@@ -29,7 +29,7 @@ static void navswitch_task (__unused__ void *data)
 static void ball_task (void *data)
 {
     Game* game = data;
-    Paddle* player = game->paddle;
+    Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
 
     /*
@@ -38,7 +38,7 @@ static void ball_task (void *data)
     }*/
 
     if (alternate && !game->show_text) {
-        paddle_off(player);
+        paddle_off(paddle);
         ball_update(ball); // Display ball position
     }
 }
@@ -47,21 +47,21 @@ static void ball_task (void *data)
 static void paddle_task (void *data)
 {
     Game* game = data;
-    Paddle* player = game->paddle;
+    Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
 
     // Check for button press events and change paddle position
     if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
-        increase_row(player);
+        increase_row(paddle);
     }
 
     if (navswitch_push_event_p(NAVSWITCH_NORTH)) {
-        decrease_row(player);
+        decrease_row(paddle);
     }
 
     if (!alternate && !game->show_text) {
         ball_off(ball);
-        paddle_update(player); // Display ball position
+        paddle_update(paddle); // Display ball position
     }
 }
 
@@ -70,16 +70,80 @@ static void paddle_task (void *data)
 void run_game(void *data)
 {
     Game* game = data;
+    Ball* ball = game->ball;
+    static bool wait_for_turn = false;
+    static int reply = 0;
+    static bool game_over = false;
+    bool finished_show_score = false;
+    static bool reset = true;
 
+    // If ball goes to either end increase score or send ball
+    if (ball->col == 0 && ball->movement_dir == -1 && !game_over) {
+        ball->state = false;
+        ball->col = -1;
+        send_ball(ball);
+        wait_for_turn = true;
+    } else if (ball->col == 4 && !game_over) {
+        if (reset) {
+            game->their_score++;
+            send_score(game);
+            wait_for_turn = true;
+        }
+        reset = show_score(game);
+    }
+
+
+
+    // Either wait for ball or update score
+    if (wait_for_turn && !game_over) {
+        reply = wait_for_reply(game);
+    }
+
+
+    // Test show score.
     if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
-        game->show_text = !game->show_text;
-        if (game->show_text) {
-            show_loss(game);
-        } else {
-            text_clear();
+        reply = 2;
+        game->your_score = 3;
+    }
+
+    if (navswitch_push_event_p(NAVSWITCH_EAST)) {
+        wait_for_turn = true;
+        reply = wait_for_reply(game);
+    }
+
+
+    // If either person has reached three points game over
+    if (game->your_score == 3 && !game_over) {
+        game_over = true;
+        send_score(game);
+        show_win(game);
+    } else if (game->their_score == 3 && !game_over) {
+        game_over = true;
+        send_score(game);
+        show_loss(game);
+    }
+
+
+
+    if (reply) {
+        wait_for_turn = false;
+        // If score sent back show score unless game_over.
+        if (reply == 2 && !game_over) {
+            finished_show_score = show_score(game);
+            if (finished_show_score) {
+                reply = 0;
+            }
+        }
+
+        // If ball sent back turn back on.
+        if (reply == 1) {
+            ball->state = true;
+            reply = 0;
         }
     }
 
+
+    // If displaying text, update display
     if (game->show_text) {
         text_update();
     }
@@ -89,21 +153,21 @@ void run_game(void *data)
 int main (void)
 {
     // Init ball in centre
-    static Ball ball;
+    Ball ball;
     ball_init (&ball);
 
     // Init paddle on bottom column
-    static Paddle paddle;
+    Paddle paddle;
     paddle_init (&paddle);
 
-    static Game game = {.ball = &ball, .paddle = &paddle, .your_score = 0, .their_score = 0};
+    Game game = {.ball = &ball, .paddle = &paddle, .your_score = 0, .their_score = 0};
 
     // Initialise system and set inital dot positions
     system_init ();
     navswitch_init ();
     ledmat_init ();
     transfer_init();
-    score_init(TEXT_REFRESH);
+    score_init(GAME_UPDATE);
 
     // Define tasks to run
     task_t tasks[4] =
@@ -111,7 +175,7 @@ int main (void)
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
         {.func = ball_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
         {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH},
-        {.func = run_game, .period = TASK_RATE / TEXT_REFRESH, .data = &game}
+        {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game}
     };
 
     // Run program

@@ -9,13 +9,14 @@
 
 #include "system.h"
 #include "ball.h"
+#include "text.h"
 
 void transfer_init(void);
 
-void send_score(int score);
+void send_score(Game* game);
 
 void send_ball(Ball* ball);
 
-void wait_for_reply(void);
+int wait_for_reply(Game* game);
 
 #endif

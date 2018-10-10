@@ -18,6 +18,7 @@ struct paddle_s
     int prev_rows[3];
     int prev_col;
     bool moved;
+    bool state;
 
 };
 
