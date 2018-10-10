@@ -31,10 +31,19 @@ void ball_init (Ball* ball)
 
 void check_wall_collision(Ball* ball)
 {
-    if (ball->row == 1) {       // Righthand wall
+    if (ball->row == 1) {        // Righthand wall
         ball->angle = 0;
-    } else if (ball->row == 7) {
-        ball->angle = 2;        // Lefthand wall
+    } else if (ball->row == 7) { // Lefthand wall
+        ball->angle = 2;
+    }
+}
+
+void check_end_collision(Ball* ball)
+{
+    if (ball->col == 1) {        // Far end
+        ball->movement_dir = 1;
+    } else if (ball->col == 5) { // Paddle end
+        ball->movement_dir = -1;
     }
 }
 
@@ -53,6 +62,8 @@ void move_ball (Ball* ball)
     } else if (ball->angle == 2) {
         ball->row--;
     }
+    check_wall_collision(ball);
+    check_end_collision(ball);
     ball->moved = true;
 }
 
