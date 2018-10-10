@@ -4,7 +4,7 @@
     @brief  LED matrix driver.
 
     @defgroup ledmat LED matrix driver
-       
+
     This module implements a simple hardware abstraction of a LED matrix.
 */
 #ifndef LEDMAT_H
@@ -14,11 +14,21 @@
 
 
 /** Define PIO pins driving LED matrix rows.  */
-static const pio_t ledmat_rows[];
+static const pio_t ledmat_rows[] =
+{
+    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
+    LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
+    LEDMAT_ROW7_PIO
+};
 
 
 /** Define PIO pins driving LED matrix columns.  */
-static const pio_t ledmat_cols[];
+static const pio_t ledmat_cols[] =
+{
+    LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
+    LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
+};
+
 
 
 /** Initialise PIO pins to drive LED matrix.  */

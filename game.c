@@ -8,16 +8,20 @@
 #include "ball.h"
 #include "transfer.h"
 #include "text.h"
+#include <stdbool.h>
 
 
 #define BALL_REFRESH 100
 #define PADDLE_REFRESH 100
-#define SWITCH_REFRESH 50
+#define SWITCH_REFRESH 100
+#define TEXT_REFRESH 250
 
+static bool alternate = false;
 
 static void navswitch_task (__unused__ void *data)
 {
     navswitch_update(); // Check for button presses
+    alternate = !alternate; // Alternate showing ball and paddle.
 }
 
 
@@ -25,55 +29,60 @@ static void navswitch_task (__unused__ void *data)
 static void ball_task (void *data)
 {
     Game* game = data;
-    Paddle* player_1 = game->paddle;
+    Paddle* player = game->paddle;
     Ball* ball = game->ball;
 
     /*
-    // Check for button press events and change ball position
-    if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
-        increase_row_ball(ball);
-    }
-
-    if (navswitch_push_event_p(NAVSWITCH_NORTH)) {
-        decrease_row_ball(ball);
-    }
-
-    if (navswitch_push_event_p(NAVSWITCH_EAST)) {
-        increase_col_ball(ball);
-    }
-
-    if (navswitch_push_event_p(NAVSWITCH_WEST)) {
-        decrease_col_ball(ball);
-    }
-    */
-
-    // Turn ball on or off
     if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
         ball->state = !ball->state;
-    }
+    }*/
 
-    paddle_off(player_1);
-    ball_update(ball); // Display ball position
+    if (alternate && !game->show_text) {
+        paddle_off(player);
+        ball_update(ball); // Display ball position
+    }
 }
 
 
 static void paddle_task (void *data)
 {
     Game* game = data;
-    Paddle* player_1 = game->paddle;
+    Paddle* player = game->paddle;
     Ball* ball = game->ball;
 
     // Check for button press events and change paddle position
     if (navswitch_push_event_p(NAVSWITCH_SOUTH)) {
-        increase_row(player_1);
+        increase_row(player);
     }
 
     if (navswitch_push_event_p(NAVSWITCH_NORTH)) {
-        decrease_row(player_1);
+        decrease_row(player);
     }
 
-    ball_off(ball);
-    paddle_update(player_1); //Display new paddle position
+    if (!alternate && !game->show_text) {
+        ball_off(ball);
+        paddle_update(player); // Display ball position
+    }
+}
+
+
+
+void run_game(void *data)
+{
+    Game* game = data;
+
+    if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
+        game->show_text = !game->show_text;
+        if (game->show_text) {
+            show_loss(game);
+        } else {
+            text_clear();
+        }
+    }
+
+    if (game->show_text) {
+        text_update();
+    }
 }
 
 
@@ -89,21 +98,21 @@ int main (void)
 
     static Game game = {.ball = &ball, .paddle = &paddle, .your_score = 0, .their_score = 0};
 
-    // Define tasks to run
-    task_t tasks[3] =
-    {
-        {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
-        {.func = ball_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
-        {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH}
-    };
-
-
     // Initialise system and set inital dot positions
     system_init ();
     navswitch_init ();
     ledmat_init ();
     transfer_init();
+    score_init(TEXT_REFRESH);
 
+    // Define tasks to run
+    task_t tasks[4] =
+    {
+        {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
+        {.func = ball_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
+        {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH},
+        {.func = run_game, .period = TASK_RATE / TEXT_REFRESH, .data = &game}
+    };
 
     // Run program
     task_schedule (tasks, ARRAY_SIZE (tasks));

@@ -17,7 +17,7 @@ struct ball_s
     int col;
     int prev_row;
     int prev_col;
-    int movement_dir;
+    int movement_dir; // -1 for away, 1 for towards.
     int angle; // Angle - 0 = 45 left, 1 = straight, 2 = 45 right
     bool moved;
     bool state; // Turns on or off the ball.
@@ -26,11 +26,8 @@ struct ball_s
 
 void ball_init (Ball* ball);
 
-// Symantic not going to be used just made for testing purposes.
-void increase_row_ball (Ball* ball);
-void decrease_row_ball (Ball* ball);
-void increase_col_ball (Ball* ball);
-void decrease_col_ball (Ball* ball);
+// Move the ball one step.
+void move_ball (Ball* ball);
 
 void ball_update (Ball* ball);
 

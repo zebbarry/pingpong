@@ -8,23 +8,6 @@
 #include "ledmat.h"
 
 
-/** Define PIO pins driving LED matrix rows.  */
-static const pio_t ledmat_rows[] =
-{
-    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO, 
-    LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
-    LEDMAT_ROW7_PIO
-};
-
-
-/** Define PIO pins driving LED matrix columns.  */
-static const pio_t ledmat_cols[] =
-{
-    LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
-    LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
-};
-
-
 /** Initialise PIO pins to drive LED matrix.  */
 void ledmat_init (void)
 {
@@ -74,5 +57,3 @@ void ledmat_display_column (uint8_t pattern, uint8_t col)
     pio_output_low (ledmat_cols[col]);
     col_prev = col;
 }
-
-

@@ -10,6 +10,7 @@
 #include "system.h"
 #include "paddle.h"
 #include "ball.h"
+#include <stdbool.h>
 
 typedef struct game_s Game;
 
@@ -19,6 +20,7 @@ struct game_s
     Ball* ball;
     int your_score;
     int their_score;
+    bool show_text;
 };
 
 void score_init(int update_rate);
@@ -29,5 +31,8 @@ void show_win(Game* game);
 
 void show_loss(Game* game);
 
+void text_update(void);
+
+void text_clear(void);
 
 #endif

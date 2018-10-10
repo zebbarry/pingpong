@@ -13,9 +13,9 @@ typedef struct paddle_s Paddle;
 
 struct paddle_s
 {
-    int rows[2];
+    int rows[3];
     int col;
-    int prev_rows[2];
+    int prev_rows[3];
     int prev_col;
     bool moved;
 

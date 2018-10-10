@@ -7,27 +7,12 @@
 
 #include "system.h"
 #include "pio.h"
-#include "ledmat.h"
+#include "modules/ledmat.h"
 #include "ball.h"
 #include <stdbool.h>
 #include <stdio.h>
 
 
-/** Define PIO pins driving LED matrix rows.  */
-static const pio_t ledmat_rows[] =
-{
-    LEDMAT_ROW1_PIO, LEDMAT_ROW2_PIO, LEDMAT_ROW3_PIO,
-    LEDMAT_ROW4_PIO, LEDMAT_ROW5_PIO, LEDMAT_ROW6_PIO,
-    LEDMAT_ROW7_PIO
-};
-
-
-/** Define PIO pins driving LED matrix columns.  */
-static const pio_t ledmat_cols[] =
-{
-    LEDMAT_COL1_PIO, LEDMAT_COL2_PIO, LEDMAT_COL3_PIO,
-    LEDMAT_COL4_PIO, LEDMAT_COL5_PIO
-};
 
 
 
@@ -38,9 +23,9 @@ void ball_init (Ball* ball)
     ball->col = 2;
     ball->prev_row = 0;
     ball->prev_col = 0;
+    ball->angle = 1; // Straight down
+    ball->movement_dir = 1; // Towards
     ball->moved = false;
-    pio_output_low(ledmat_rows[ball->row]);
-    pio_output_low(ledmat_cols[ball->col]);
 }
 
 
@@ -49,10 +34,10 @@ void move_ball (Ball* ball)
 {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;
-    ball->col++
+    ball->col++;
     if (ball->movement_dir > 0) {
         ball->row++;
-    } else if {ball->movement_dir < 0) {
+    } else if (ball->movement_dir < 0) {
         ball->row--;
     }
     ball->moved = true;
@@ -94,4 +79,3 @@ void ball_on(Ball* ball)
         pio_output_low(ledmat_cols[ball->col]);
     }
 }
-
