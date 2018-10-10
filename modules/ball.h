@@ -8,6 +8,7 @@
 #define BALL_H
 
 #include "system.h"
+#include "paddle.h"
 
 typedef struct ball_s Ball;
 
@@ -27,7 +28,11 @@ struct ball_s
 void ball_init (Ball* ball);
 
 // Move the ball one step.
-void move_ball (Ball* ball);
+void move_ball (Ball* ball, Paddle* paddle);
+
+void check_paddle_collision(Ball* ball, Paddle* paddle);
+void check_wall_collision(Ball* ball);
+void check_end_collision(Ball* ball);
 
 void ball_update (Ball* ball);
 

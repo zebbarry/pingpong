@@ -12,6 +12,7 @@
 
 
 #define BALL_REFRESH 100
+#define BALL_MOVE_RATE 3
 #define PADDLE_REFRESH 100
 #define SWITCH_REFRESH 100
 #define GAME_UPDATE 250
@@ -26,7 +27,7 @@ static void navswitch_task (__unused__ void *data)
 
 
 // Set ball in postion.
-static void ball_task (void *data)
+static void ball_display_task (void *data)
 {
     Game* game = data;
     Paddle* paddle = game->paddle;
@@ -41,6 +42,16 @@ static void ball_task (void *data)
         paddle_off(paddle);
         ball_update(ball); // Display ball position
     }
+}
+
+
+static void ball_move_task (void *data)
+{
+    Game* game = data;
+    Paddle* player = game->paddle;
+    Ball* ball = game->ball;
+
+    move_ball(ball, player);
 }
 
 
@@ -170,10 +181,11 @@ int main (void)
     score_init(GAME_UPDATE);
 
     // Define tasks to run
-    task_t tasks[4] =
+    task_t tasks[5] =
     {
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
-        {.func = ball_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
+        {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
+        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
         {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH},
         {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game}
     };

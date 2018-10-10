@@ -9,6 +9,7 @@
 #include "pio.h"
 #include "modules/ledmat.h"
 #include "ball.h"
+#include "paddle.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -23,23 +24,64 @@ void ball_init (Ball* ball)
     ball->col = 2;
     ball->prev_row = 0;
     ball->prev_col = 0;
-    ball->angle = 1; // Straight down
+    ball->angle = 0; // Straight down
     ball->movement_dir = 1; // Towards
     ball->moved = false;
 }
 
 
+void check_wall_collision(Ball* ball)
+{
+    if (ball->row == 0) {        // Righthand wall
+        ball->angle = 0;
+    } else if (ball->row == 6) { // Lefthand wall
+        ball->angle = 2;
+    }
+}
+
+void check_end_collision(Ball* ball)
+{
+    if (ball->col == 0) {        // Far end
+        ball->movement_dir = 1;
+    } else if (ball->col == 4) { // Paddle end
+        ball->movement_dir = -1;
+    }
+}
+
+void check_paddle_collision(Ball* ball, Paddle* paddle)
+{
+    if (ball->row == paddle->rows[1] - 1) {
+        ball->angle = 2;
+        ball->movement_dir = -1;
+    } else if (ball->row == paddle->rows[1]) {
+        ball->angle = 1;
+        ball->movement_dir = -1;
+    } else if (ball->row == paddle->rows[1] + 1) {
+        ball->angle = 0;
+        ball->movement_dir = -1;
+    }
+}
+
 // Move the ball one step.
-void move_ball (Ball* ball)
+void move_ball (Ball* ball, Paddle* paddle)
 {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;
-    ball->col++;
-    if (ball->movement_dir > 0) {
+    if (ball->movement_dir == -1) {
+        ball->col--;
+    } else if (ball->movement_dir == 1) {
+        ball->col++;
+    }
+    if (ball->angle == 0) {
         ball->row++;
-    } else if (ball->movement_dir < 0) {
+    } else if (ball->angle == 2) {
         ball->row--;
     }
+    if (ball->col == 3 && ball->movement_dir == 1) {
+        check_paddle_collision(ball, paddle);
+    }
+    check_wall_collision(ball);
+    check_end_collision(ball);
     ball->moved = true;
 }
 
