@@ -23,7 +23,7 @@ void ball_init (Ball* ball)
     ball->col = 2;
     ball->prev_row = 0;
     ball->prev_col = 0;
-    ball->angle = 1; // Straight down
+    ball->angle = 0; // Straight down
     ball->movement_dir = 1; // Towards
     ball->moved = false;
 }
@@ -31,18 +31,18 @@ void ball_init (Ball* ball)
 
 void check_wall_collision(Ball* ball)
 {
-    if (ball->row == 1) {        // Righthand wall
+    if (ball->row == 0) {        // Righthand wall
         ball->angle = 0;
-    } else if (ball->row == 7) { // Lefthand wall
+    } else if (ball->row == 6) { // Lefthand wall
         ball->angle = 2;
     }
 }
 
 void check_end_collision(Ball* ball)
 {
-    if (ball->col == 1) {        // Far end
+    if (ball->col == 0) {        // Far end
         ball->movement_dir = 1;
-    } else if (ball->col == 5) { // Paddle end
+    } else if (ball->col == 4) { // Paddle end
         ball->movement_dir = -1;
     }
 }
@@ -54,7 +54,7 @@ void move_ball (Ball* ball)
     ball->prev_col = ball->col;
     if (ball->movement_dir == -1) {
         ball->col--;
-    } else if (ball->angle == 1) {
+    } else if (ball->movement_dir == 1) {
         ball->col++;
     }
     if (ball->angle == 0) {
