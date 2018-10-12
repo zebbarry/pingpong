@@ -45,8 +45,8 @@ bool show_score(Game* game)
         sprintf(score, "%d%d", game->your_score, game->their_score);
         score[2] = '\0';
         tinygl_text (score);
-    } else {
         counter++;
+    } else {
         // If five seconds have passed
         if (counter == (5 * REFRESH_RATE)) {
             finished = true;
