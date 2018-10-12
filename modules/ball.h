@@ -29,6 +29,7 @@ void ball_init (Ball* ball);
 
 // Move the ball one step.
 void move_ball (Ball* ball, Paddle* paddle);
+void ball_reset_pos(Ball* ball);
 
 void check_paddle_collision(Ball* ball, Paddle* paddle);
 void check_wall_collision(Ball* ball);

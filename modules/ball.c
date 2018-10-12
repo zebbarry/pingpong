@@ -85,6 +85,11 @@ void move_ball (Ball* ball, Paddle* paddle)
     ball->moved = true;
 }
 
+// sets ball position to row 3, col 2
+void ball_reset_pos(Ball* ball) {
+    ball->row = 3;
+    ball->col = 2;
+}
 
 // Update display to show new ball position.
 void ball_update(Ball* ball)
