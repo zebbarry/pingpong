@@ -33,11 +33,6 @@ static void ball_display_task (void *data)
     Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
 
-    /*
-    if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
-        ball->state = !ball->state;
-    }*/
-
     if (alternate && !game->show_text) {
         paddle_off(paddle);
         ball_update(ball); // Display ball position
@@ -90,17 +85,17 @@ void run_game(void *data)
 
 
     // If ball goes to either end increase score or send ball
-    if (ball->col == 0 && ball->movement_dir == -1 && !game_over) {
+    if (ball->col == 0 && ball->movement_dir == AWAY && !game_over) {
         ball->state = false;
-        ball->movement_dir = 0; // Stop moving
+        ball->movement_dir = STOPPED; // Stop moving
         send_ball(ball);
         wait_for_turn = true;
     } else if (ball->col == 4 && !game_over) {
         game->their_score++;
-        if (game->their_score != 3) {
-            ball_reset_pos(ball);
+        if (game->their_score != 3) {  // Check wasn't winning point
             displaying_score = true;
             send_score(game);
+            ball_reset_pos(ball);
         }
     }
 
@@ -109,7 +104,7 @@ void run_game(void *data)
         if (reset) {
             displaying_score = false;
             reply = 0;
-            ball->movement_dir = 1;
+            ball->movement_dir = TOWARDS;
         }
     }
 
@@ -124,16 +119,15 @@ void run_game(void *data)
     // If either person has reached three points game over
     if (game->your_score == 3 && !game_over) {
         game_over = true;
-        ball->movement_dir = 0; // Stop moving
         ball_reset_pos(ball);
         send_score(game);
         show_win(game);
+        ball_reset_pos(ball);
     } else if (game->their_score == 3 && !game_over) {
         game_over = true;
-        ball->movement_dir = 0; // Stop moving
-        ball_reset_pos(ball);
         send_score(game);
         show_loss(game);
+        ball_reset_pos(ball);
     }
 
 
@@ -156,6 +150,21 @@ void run_game(void *data)
     // If displaying text, update display
     if (game->show_text) {
         text_update();
+    }
+
+    // Reset game, for debugging purposes.
+    if (game_over) {
+        if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
+            game_over = false;
+            game->show_text = false;
+            text_clear();
+            ball_init(ball);
+            paddle_init(game->paddle);
+            ball_on(ball);
+            paddle_on(game->paddle);
+            game->your_score = 0;
+            game->their_score = 0;
+        }
     }
 }
 

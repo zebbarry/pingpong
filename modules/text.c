@@ -50,6 +50,7 @@ bool show_score(Game* game)
         score[2] = '\0';
         tinygl_text (score);
         counter++;
+        
     } else {
         // If three seconds have passed
         counter++;
@@ -71,7 +72,7 @@ void show_win(Game* game)
 {
     Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
-    
+
     game->show_text = true;
     paddle->state = false;
     paddle_off(paddle);
