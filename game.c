@@ -85,7 +85,7 @@ void run_game(void *data)
     static bool wait_for_turn = false;
     static int reply = 0;
     static bool game_over = false;
-    bool finished_show_score = false;
+    static bool finished_show_score = false;
     static bool reset = false;
     static bool displaying_score = false;
 
