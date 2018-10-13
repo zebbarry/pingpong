@@ -12,10 +12,10 @@
 
 
 #define BALL_REFRESH 100
-#define BALL_MOVE_RATE 3
+#define BALL_MOVE_RATE 2
 #define PADDLE_REFRESH 100
 #define SWITCH_REFRESH 100
-#define GAME_UPDATE 250
+#define GAME_UPDATE 200
 
 static bool alternate = false;
 
@@ -194,8 +194,8 @@ int main (void)
     {
         {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
+        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game}
         {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
-        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
         {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH}
     };
 

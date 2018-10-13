@@ -24,7 +24,7 @@ void ball_init (Ball* ball)
     ball->col = 2;
     ball->prev_row = 0;
     ball->prev_col = 0;
-    ball->angle = 0; // Straight down
+    ball->angle = 1; // Straight down
     ball->movement_dir = 1; // Towards
     ball->moved = false;
 }
