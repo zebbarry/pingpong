@@ -86,7 +86,9 @@ void run_game(void *data)
     static int reply = 0;
     static bool game_over = false;
     bool finished_show_score = false;
-    static bool reset = true;
+    static bool reset = false;
+    static bool displaying_score = false;
+
 
     // If ball goes to either end increase score or send ball
     if (ball->col == 0 && ball->movement_dir == -1 && !game_over) {
@@ -94,13 +96,18 @@ void run_game(void *data)
         ball->col = -1;
         send_ball(ball);
         wait_for_turn = true;
-    } else if (ball->col == 4 && ball->movement_dir == 1 && !game_over) {
-        if (reset) {
-            game->their_score++;
-            send_score(game);
-            wait_for_turn = true;
-        }
+    } else if (ball->col == 4 && !game_over) {
+        game->their_score++;
+        ball_reset_pos(ball);
+        displaying_score = true;
+        send_score(game);
+    }
+
+    if (displaying_score) {
         reset = show_score(game);
+        if (reset) {
+            displaying_score = false;
+        }
     }
 
 
@@ -144,6 +151,7 @@ void run_game(void *data)
             finished_show_score = show_score(game);
             if (finished_show_score) {
                 reply = 0;
+                finished_show_score = 0;
             }
         }
 
