@@ -92,6 +92,7 @@ void ball_reset_pos(Ball* ball) {
     ball->row = 3;
     ball->col = 0;
     ball->movement_dir = STOPPED;
+    ball->angle = STRAIGHT;
 }
 
 // Update display to show new ball position.

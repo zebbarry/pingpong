@@ -10,6 +10,7 @@
 #include "modules/paddle.h"
 #include "modules/ball.h"
 #include "modules/text.h"
+#include <stdbool.h>
 
 
 void transfer_init(void)
@@ -93,3 +94,41 @@ int wait_for_reply(Game* game)
 
     return result;
 }
+
+bool recieve_connection(void)
+{
+    bool result = false;
+    char signal = '\0';
+    if (ir_uart_read_ready_p()) {
+        signal = ir_uart_getc();
+        if (signal == '?') {
+            result = true;
+        }
+    }
+}
+
+bool send_connection(void)
+{
+    bool result = false;
+    ir_uart_putc('?');
+    if (ir_uart_write_finished_p()) {
+        result = true;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
