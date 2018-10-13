@@ -21,7 +21,7 @@ void ball_init (Ball* ball)
 {
     ball->state = true;
     ball->row = 3;
-    ball->col = 2;
+    ball->col = 0;
     ball->prev_row = 0;
     ball->prev_col = 0;
     ball->angle = 1; // Straight down
@@ -65,30 +65,36 @@ void check_paddle_collision(Ball* ball, Paddle* paddle)
 // Move the ball one step.
 void move_ball (Ball* ball, Paddle* paddle)
 {
-    ball->prev_row = ball->row;
-    ball->prev_col = ball->col;
-    if (ball->movement_dir == -1) {
-        ball->col--;
-    } else if (ball->movement_dir == 1) {
-        ball->col++;
+    if (ball->movement_dir) {
+        ball->prev_row = ball->row;
+        ball->prev_col = ball->col;
+        if (ball->movement_dir == -1) {
+            ball->col--;
+        } else if (ball->movement_dir == 1) {
+            ball->col++;
+        }
+        if (ball->angle == 0) {
+            ball->row++;
+        } else if (ball->angle == 2) {
+            ball->row--;
+        }
+        if (ball->col == 3 && ball->movement_dir == 1) {
+            check_paddle_collision(ball, paddle);
+        }
+        check_wall_collision(ball);
+        check_end_collision(ball);
+        ball->moved = true;
     }
-    if (ball->angle == 0) {
-        ball->row++;
-    } else if (ball->angle == 2) {
-        ball->row--;
-    }
-    if (ball->col == 3 && ball->movement_dir == 1) {
-        check_paddle_collision(ball, paddle);
-    }
-    check_wall_collision(ball);
-    check_end_collision(ball);
-    ball->moved = true;
 }
 
 // sets ball position to row 3, col 2
 void ball_reset_pos(Ball* ball) {
+    ball->prev_row = ball->row;
+    ball->prev_col = ball->col;
+    ball->moved = true;
     ball->row = 3;
-    ball->col = 2;
+    ball->col = 0;
+    ball->movement_dir = 0;
 }
 
 // Update display to show new ball position.

@@ -15,7 +15,7 @@
 #define BALL_MOVE_RATE 2
 #define PADDLE_REFRESH 100
 #define SWITCH_REFRESH 100
-#define GAME_UPDATE 200
+#define GAME_UPDATE 250
 
 static bool alternate = false;
 
@@ -85,7 +85,6 @@ void run_game(void *data)
     static bool wait_for_turn = false;
     static int reply = 0;
     static bool game_over = false;
-    bool finished_show_score = false;
     static bool reset = false;
     static bool displaying_score = false;
 
@@ -93,20 +92,24 @@ void run_game(void *data)
     // If ball goes to either end increase score or send ball
     if (ball->col == 0 && ball->movement_dir == -1 && !game_over) {
         ball->state = false;
-        ball->col = -1;
+        ball->movement_dir = 0; // Stop moving
         send_ball(ball);
         wait_for_turn = true;
     } else if (ball->col == 4 && !game_over) {
         game->their_score++;
-        ball_reset_pos(ball);
-        displaying_score = true;
-        send_score(game);
+        if (game->their_score != 3) {
+            ball_reset_pos(ball);
+            displaying_score = true;
+            send_score(game);
+        }
     }
 
     if (displaying_score) {
         reset = show_score(game);
         if (reset) {
             displaying_score = false;
+            reply = 0;
+            ball->movement_dir = 1;
         }
     }
 
@@ -118,26 +121,17 @@ void run_game(void *data)
     }
 
 
-    // Test send score.
-    // if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
-    //     reply = 2;
-    //     game->your_score = 2;
-    // }
-
-    // Test wait_for reply
-    // if (navswitch_push_event_p(NAVSWITCH_EAST)) {
-    //     wait_for_turn = true;
-    //     reply = wait_for_reply(game);
-    // }
-
-
     // If either person has reached three points game over
     if (game->your_score == 3 && !game_over) {
         game_over = true;
+        ball->movement_dir = 0; // Stop moving
+        ball_reset_pos(ball);
         send_score(game);
         show_win(game);
     } else if (game->their_score == 3 && !game_over) {
         game_over = true;
+        ball->movement_dir = 0; // Stop moving
+        ball_reset_pos(ball);
         send_score(game);
         show_loss(game);
     }
@@ -148,11 +142,7 @@ void run_game(void *data)
         wait_for_turn = false;
         // If score sent back show score unless game_over.
         if (reply == 2 && !game_over) {
-            finished_show_score = show_score(game);
-            if (finished_show_score) {
-                reply = 0;
-                finished_show_score = 0;
-            }
+            displaying_score = true;
         }
 
         // If ball sent back turn back on.
@@ -194,7 +184,7 @@ int main (void)
     {
         {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
-        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game}
+        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
         {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
         {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH}
     };

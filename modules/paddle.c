@@ -87,8 +87,6 @@ void paddle_update(Paddle* paddle)
             paddle->moved = false;
         }
         paddle_on(paddle);
-    } else {
-        paddle_off(paddle);
     }
 }
 

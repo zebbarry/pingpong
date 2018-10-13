@@ -36,11 +36,14 @@ bool show_score(Game* game)
     static int counter;
     Ball* ball = game->ball;
     Paddle* paddle = game->paddle;
-    if (game->show_text = false) {
+    if (!game->show_text) {
         game->show_text = true;
         paddle->state = false;
+        paddle_off(paddle);
         ball->state = false;
+        ball_off(ball);
         counter = 0;
+
         tinygl_clear();
         char score[3];
         sprintf(score, "%d%d", game->your_score, game->their_score);
@@ -48,14 +51,15 @@ bool show_score(Game* game)
         tinygl_text (score);
         counter++;
     } else {
-        // If five seconds have passed
-        if (counter == (5 * REFRESH_RATE)) {
+        // If three seconds have passed
+        counter++;
+        if (counter >= (3 * REFRESH_RATE)) {
             finished = true;
             counter = 0;
             game->show_text = false;
             text_clear();
-            ball_on(ball);
-            paddle_on(paddle);
+            ball->state = true;
+            paddle->state = true;
         }
     }
 
@@ -65,7 +69,15 @@ bool show_score(Game* game)
 
 void show_win(Game* game)
 {
+    Paddle* paddle = game->paddle;
+    Ball* ball = game->ball;
+    
     game->show_text = true;
+    paddle->state = false;
+    paddle_off(paddle);
+    ball->state = false;
+    ball_off(ball);
+
     tinygl_clear();
     tinygl_text_speed_set(MESSAGE_RATE);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);
@@ -80,7 +92,14 @@ void show_win(Game* game)
 
 void show_loss(Game* game)
 {
+    Paddle* paddle = game->paddle;
+    Ball* ball = game->ball;
     game->show_text = true;
+    paddle->state = false;
+    paddle_off(paddle);
+    ball->state = false;
+    ball_off(ball);
+
     tinygl_clear();
     tinygl_text_speed_set(MESSAGE_RATE);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);
