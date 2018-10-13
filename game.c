@@ -12,10 +12,10 @@
 
 
 #define BALL_REFRESH 100
-#define BALL_MOVE_RATE 3
+#define BALL_MOVE_RATE 2
 #define PADDLE_REFRESH 100
 #define SWITCH_REFRESH 100
-#define GAME_UPDATE 250
+#define GAME_UPDATE 200
 
 static bool alternate = false;
 
@@ -118,16 +118,17 @@ void run_game(void *data)
     }
 
 
-    // Test show score.
-    if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
-        reply = 2;
-        game->your_score = 3;
-    }
+    // Test send score.
+    // if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
+    //     reply = 2;
+    //     game->your_score = 2;
+    // }
 
-    if (navswitch_push_event_p(NAVSWITCH_EAST)) {
-        wait_for_turn = true;
-        reply = wait_for_reply(game);
-    }
+    // Test wait_for reply
+    // if (navswitch_push_event_p(NAVSWITCH_EAST)) {
+    //     wait_for_turn = true;
+    //     reply = wait_for_reply(game);
+    // }
 
 
     // If either person has reached three points game over
@@ -191,11 +192,11 @@ int main (void)
     // Define tasks to run
     task_t tasks[5] =
     {
+        {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
+        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game}
         {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
-        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
-        {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH},
-        {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game}
+        {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH}
     };
 
     // Run program

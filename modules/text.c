@@ -33,13 +33,14 @@ void score_init(int update_rate)
 bool show_score(Game* game)
 {
     bool finished = false;
-    static int counter = 0;
+    static int counter;
     Ball* ball = game->ball;
     Paddle* paddle = game->paddle;
-    if (counter == 0) {
+    if (game->show_text = false) {
         game->show_text = true;
         paddle->state = false;
         ball->state = false;
+        counter = 0;
         tinygl_clear();
         char score[3];
         sprintf(score, "%d%d", game->your_score, game->their_score);
