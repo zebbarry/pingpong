@@ -194,7 +194,7 @@ int main (void)
     {
         {.func = run_game, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = paddle_task, .period = TASK_RATE / PADDLE_REFRESH, .data = &game},
-        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game}
+        {.func = ball_display_task, .period = TASK_RATE / BALL_REFRESH, .data = &game},
         {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
         {.func = navswitch_task, .period = TASK_RATE / SWITCH_REFRESH}
     };
