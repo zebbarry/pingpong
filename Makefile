@@ -70,8 +70,11 @@ display.o: ../../drivers/display.c ../../drivers/avr/system.h ../../drivers/disp
 prescale.o: ../../drivers/avr/prescale.c ../../drivers/avr/prescale.h ../../drivers/avr/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
+led.o: ../../drivers/led.c ../../drivers/avr/system.h ../../drivers/avr/pio.h ../../drivers/led.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
 # Link: create ELF output file from object files.
-game.out: game.o pio.o system.o ledmat.o navswitch.o paddle.o ball.o task.o timer.o transfer.o display.o font.o usart1.o ir_uart.o timer0.o tinygl.o text.o prescale.o
+game.out: game.o pio.o system.o ledmat.o navswitch.o paddle.o ball.o task.o timer.o transfer.o display.o font.o usart1.o ir_uart.o timer0.o tinygl.o text.o prescale.o led.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 

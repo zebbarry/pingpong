@@ -16,7 +16,7 @@
 #include <stdbool.h>
 
 
-#define MESSAGE_RATE 10
+#define MESSAGE_RATE 15
 
 static int REFRESH_RATE = 0;
 
@@ -50,7 +50,7 @@ bool show_score(Game* game)
         score[2] = '\0';
         tinygl_text (score);
         counter++;
-        
+
     } else {
         // If three seconds have passed
         counter++;

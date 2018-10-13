@@ -57,3 +57,15 @@ void ledmat_display_column (uint8_t pattern, uint8_t col)
     pio_output_low (ledmat_cols[col]);
     col_prev = col;
 }
+
+
+// Clear display
+void ledmat_clear(void)
+{
+    for (int i = 0; i < LEDMAT_ROWS_NUM; i++) {
+        pio_output_high(ledmat_rows[i]);
+    }
+    for (int i = 0; i < LEDMAT_COLS_NUM; i++) {
+        pio_output_high(ledmat_cols[i]);
+    }
+}

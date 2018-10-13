@@ -84,7 +84,7 @@ void move_ball (Ball* ball, Paddle* paddle)
     }
 }
 
-// sets ball position to row 3, col 2
+// sets ball position to row 3, col 0
 void ball_reset_pos(Ball* ball) {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;

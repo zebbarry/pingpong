@@ -41,4 +41,6 @@ void ledmat_init (void);
 void ledmat_display_column (uint8_t pattern, uint8_t col);
 
 
+void ledmat_clear(void);
+
 #endif

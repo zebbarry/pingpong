@@ -105,6 +105,7 @@ bool recieve_connection(void)
             result = true;
         }
     }
+    return result;
 }
 
 bool send_connection(void)
@@ -114,21 +115,5 @@ bool send_connection(void)
     if (ir_uart_write_finished_p()) {
         result = true;
     }
+    return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
