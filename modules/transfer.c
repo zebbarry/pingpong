@@ -98,22 +98,20 @@ int wait_for_reply(Game* game)
 bool recieve_connection(void)
 {
     bool result = false;
-    char signal = '\0';
+    char ready = 'N';
     if (ir_uart_read_ready_p()) {
-        signal = ir_uart_getc();
-        if (signal == '?') {
+        ready = ir_uart_getc();
+        if (ready == 'Y') {
             result = true;
         }
     }
     return result;
 }
 
-bool send_connection(void)
+void send_connection(void)
 {
-    bool result = false;
-    ir_uart_putc('?');
-    if (ir_uart_write_finished_p()) {
-        result = true;
+    ir_uart_putc('Y');
+    while (!ir_uart_write_finished_p()) {
+        continue;
     }
-    return result;
 }

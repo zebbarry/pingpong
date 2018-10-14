@@ -79,7 +79,7 @@ void move_ball (Ball* ball, Paddle* paddle)
             check_paddle_collision(ball, paddle);
         }
         check_wall_collision(ball);
-        check_end_collision(ball);
+        //check_end_collision(ball);
         ball->moved = true;
     }
 }

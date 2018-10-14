@@ -21,7 +21,10 @@ struct game_s
     int your_score;
     int their_score;
     bool show_text;
+    bool start;
 };
+
+void start_screen(Game* game);
 
 void score_init(int update_rate);
 

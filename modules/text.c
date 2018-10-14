@@ -20,6 +20,18 @@
 
 static int REFRESH_RATE = 0;
 
+
+void start_screen(Game* game)
+{
+    char* message = "PONG";
+    tinygl_clear();
+    tinygl_text_speed_set(MESSAGE_RATE);
+    tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);
+    tinygl_text(message);
+    game->show_text = true;
+}
+
+
 void score_init(int update_rate)
 {
     REFRESH_RATE = update_rate;
@@ -45,6 +57,7 @@ bool show_score(Game* game)
         counter = 0;
 
         tinygl_clear();
+        tinygl_text_mode_set (TINYGL_TEXT_MODE_STEP);
         char score[3];
         sprintf(score, "%d%d", game->your_score, game->their_score);
         score[2] = '\0';
