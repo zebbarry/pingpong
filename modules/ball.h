@@ -1,5 +1,5 @@
 /** @file ball.h
- *  @author Zeb Barry
+ *  @author Max Harrison
  *  @date 8 October 2018
  *  @brief Ball class header
  */

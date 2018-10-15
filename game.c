@@ -12,7 +12,7 @@
 #include "led.h"
 
 
-#define BALL_MOVE_RATE 3
+#define BALL_MOVE_RATE 4
 #define DISPLAY_REFRESH 100
 #define GAME_UPDATE 250
 
@@ -52,18 +52,17 @@ void run(Game* game)
 {
     Ball* ball = game->ball;
     static int reply = 0;
-    static bool game_over = false;
     static bool reset = false;
     static bool displaying_score = false;
 
 
     // If ball goes to either end increase score or send ball
-    if (ball->col == 0 && ball->movement_dir == AWAY && !game_over) {
+    if (ball->col == 0 && ball->movement_dir == AWAY) {
         ball->state = false;
         ball->movement_dir = STOPPED; // Stop moving
         send_ball(ball);
         game->wait_turn = true;
-    } else if (ball->col == 4 &&!game_over) {
+    } else if (ball->col == 4) {
         game->their_score++;
         if (game->their_score != 3) {  // Check wasn't winning point
             displaying_score = true;
@@ -73,28 +72,30 @@ void run(Game* game)
     }
 
     // Either wait for ball or update score
-    if (game->wait_turn && !game_over) {
+    if (game->wait_turn) {
         reply = wait_for_reply(game);
     }
 
     // If either person has reached three points game over
-    if (game->your_score == 3 && !game_over) {
-        game_over = true;
+    if (game->your_score == 3) {
         ball_reset_pos(ball);
         send_score(game);
         show_win(game);
-        ball_reset_pos(ball);
-    } else if (game->their_score == 3 && !game_over) {
-        game_over = true;
+        ball_init(ball);
+        game->start = false;
+        reply = 0;
+    } else if (game->their_score == 3) {
         send_score(game);
         show_loss(game);
-        ball_reset_pos(ball);
+        ball_init(ball);
+        game->start = false;
+        reply = 0;
     }
 
     if (reply) {
         game->wait_turn = false;
         // If score sent back show score unless game_over.
-        if (reply == 2 && !game_over) {
+        if (reply == 2) {
             displaying_score = true;
             game->wait_turn = true;
         }
@@ -123,6 +124,7 @@ void run(Game* game)
 }
 
 
+
 static void ball_move_task (void *data)
 {
     Game* game = data;
@@ -133,6 +135,7 @@ static void ball_move_task (void *data)
         move_ball(ball, paddle);
     }
 }
+
 
 
 static void display_task (void *data)
@@ -178,9 +181,11 @@ void controller(void *data)
             text_clear();
             ledmat_clear();
             game->show_text = false;
-            ball->state = false;
             paddle_init(paddle);
-            paddle->state = true;
+        }
+
+        if (game->your_score + game->their_score != 0) {
+            game_init(game);
         }
     } else {
         run(game);
@@ -197,6 +202,7 @@ void controller(void *data)
         text_update();
     }
 }
+
 
 
 int main (void)

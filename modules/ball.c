@@ -1,5 +1,5 @@
 /** @file ball.c
- *  @author Zeb Barry
+ *  @author Max Harrison
  *  @date 8 October 2018
  *  @brief Ball class
  *  @note Defines ball for game of pong.
@@ -16,7 +16,7 @@
 
 void ball_init (Ball* ball)
 {
-    ball->state = true;
+    ball->state = false;
     ball->row = 3;
     ball->col = 0;
     ball->prev_row = 0;
