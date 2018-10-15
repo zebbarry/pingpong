@@ -51,10 +51,24 @@ bool start_sequence(Game* game)
 void run(Game* game)
 {
     Ball* ball = game->ball;
+    Paddle* paddle = game->paddle;
     static int reply = 0;
     static bool reset = false;
     static bool displaying_score = false;
+    static int counter = 0;
 
+    if (counter == GAME_UPDATE/BALL_MOVE_RATE) {
+        counter = 0;
+    // If ball is moving off screen, send ball
+        if (ball->col == 0 && ball->movement_dir == AWAY) {
+            ball->state = false;
+            ball->movement_dir = STOPPED; // Stop moving
+            send_ball(ball);
+            game->wait_turn = true;
+        } else if (game->start) { // Else move normally
+            move_ball(ball, paddle);
+        }
+    }
 
     // If ball goes to end increase score
     if (ball->col == 4) {
@@ -116,6 +130,7 @@ void run(Game* game)
             }
         }
     }
+    counter++;
 }
 
 
@@ -231,11 +246,11 @@ int main (void)
     score_init(GAME_UPDATE);
 
     // Define tasks to run
-    task_t tasks[3] =
+    task_t tasks[2] =
     {
         {.func = controller, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = display_task, .period = TASK_RATE / DISPLAY_REFRESH, .data = &game},
-        {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
+        //{.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
     };
 
     // Show title
