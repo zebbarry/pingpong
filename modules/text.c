@@ -16,14 +16,12 @@
 #include <stdbool.h>
 
 
-#define MESSAGE_RATE 15
+#define MESSAGE_RATE 10
 
 static int REFRESH_RATE = 0;
 
 void game_init(Game* game)
 {
-    game->ball = &ball;
-    game->paddle = &paddle;
     game->your_score = 0;
     game->their_score = 0;
     game->start = false;
@@ -82,8 +80,7 @@ bool show_score(Game* game)
             counter = 0;
             game->show_text = false;
             text_clear();
-            ball->state = true;
-            paddle->state = true;
+            paddle_init(paddle);
         }
     }
 

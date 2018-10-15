@@ -11,6 +11,7 @@
 #include "modules/ball.h"
 #include "modules/text.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 
 void transfer_init(void)
@@ -37,12 +38,14 @@ void send_score(Game* game)
 
 void send_ball(Ball* ball)
 {
+    int mirror_row = 0;
     if (ir_uart_write_ready_p()) {
         ir_uart_putc('B');
         while (!ir_uart_write_finished_p()) {
             continue;
         }
-        ir_uart_putc(ball->row);
+        mirror_row = abs(ball->row - 6);
+        ir_uart_putc(mirror_row);
         while (!ir_uart_write_finished_p()) {
             continue;
         }
@@ -50,7 +53,7 @@ void send_ball(Ball* ball)
         while (!ir_uart_write_finished_p()) {
             continue;
         }
-        ir_uart_putc(ball->angle);
+        ir_uart_putc(-1 * ball->angle);
     }
 }
 

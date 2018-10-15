@@ -12,7 +12,7 @@
 #include "led.h"
 
 
-#define BALL_MOVE_RATE 2
+#define BALL_MOVE_RATE 3
 #define DISPLAY_REFRESH 100
 #define GAME_UPDATE 250
 
@@ -30,13 +30,11 @@ bool start_sequence(Game* game)
         if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
             text_clear();
             ledmat_clear();
+            paddle_init(paddle);
             game->show_text = false;
             ball->state = true;
-            paddle_init(paddle);
-            paddle->state = true;
             game->start = true;
             start_with_ball = true;
-            led_set(LED1, 1);
             send_connection();
         }
 
@@ -50,7 +48,7 @@ bool start_sequence(Game* game)
 }
 
 
-void run(Game* game, bool game->wait_turn)
+void run(Game* game)
 {
     Ball* ball = game->ball;
     static int reply = 0;
@@ -65,7 +63,7 @@ void run(Game* game, bool game->wait_turn)
         ball->movement_dir = STOPPED; // Stop moving
         send_ball(ball);
         game->wait_turn = true;
-    } else if (ball->col == 4 && !game_over) {
+    } else if (ball->col == 4 &&!game_over) {
         game->their_score++;
         if (game->their_score != 3) {  // Check wasn't winning point
             displaying_score = true;
@@ -74,12 +72,10 @@ void run(Game* game, bool game->wait_turn)
         }
     }
 
-
     // Either wait for ball or update score
     if (game->wait_turn && !game_over) {
         reply = wait_for_reply(game);
     }
-
 
     // If either person has reached three points game over
     if (game->your_score == 3 && !game_over) {
@@ -95,21 +91,21 @@ void run(Game* game, bool game->wait_turn)
         ball_reset_pos(ball);
     }
 
-
     if (reply) {
         game->wait_turn = false;
         // If score sent back show score unless game_over.
         if (reply == 2 && !game_over) {
             displaying_score = true;
+            game->wait_turn = true;
         }
 
         // If ball sent back turn back on.
         if (reply == 1) {
             ball->state = true;
+            ball->movement_dir = TOWARDS;
             reply = 0;
         }
     }
-
 
     // Show score for set time.
     if (displaying_score) {
@@ -118,24 +114,10 @@ void run(Game* game, bool game->wait_turn)
             displaying_score = false;
             reply = 0;
             ledmat_clear();
-            ball->movement_dir = TOWARDS;
-        }
-    }
-
-
-    // Reset game, for debugging purposes.
-    if (game_over) {
-        if (navswitch_push_event_p(NAVSWITCH_PUSH)) {
-            game_over = false;
-            game->show_text = false;
-            text_clear();
-            ledmat_clear();
-            ball_init(ball);
-            paddle_init(game->paddle);
-            ball_on(ball);
-            paddle_on(game->paddle);
-            game->your_score = 0;
-            game->their_score = 0;
+            if (!game->wait_turn) {
+                ball->movement_dir = TOWARDS;
+                ball->state = true;
+            }
         }
     }
 }
@@ -185,6 +167,8 @@ static void display_task (void *data)
 void controller(void *data)
 {
     Game* game = data;
+    Ball* ball = game->ball;
+    Paddle* paddle = game->paddle;
     bool begin_with_ball = false;
 
     if (!game->start) {
@@ -194,12 +178,18 @@ void controller(void *data)
             text_clear();
             ledmat_clear();
             game->show_text = false;
-            ball->state = true;
+            ball->state = false;
             paddle_init(paddle);
             paddle->state = true;
         }
     } else {
         run(game);
+    }
+
+    if (ball->state) {
+        led_set(LED1, 1);
+    } else  {
+        led_set(LED1, 0);
     }
 
     // If displaying text, update display
@@ -221,7 +211,7 @@ int main (void)
     paddle_init (&paddle);
     paddle.state = false;
 
-    Game game;
+    Game game = {.ball = &ball, .paddle = &paddle};
     game_init(&game);
 
     // Initialise system and set inital dot positions

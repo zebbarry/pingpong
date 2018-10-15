@@ -13,9 +13,9 @@
 #define TOWARDS 1
 #define AWAY -1
 #define STOPPED 0
-#define LEFT 0
-#define RIGHT 2
-#define STRAIGHT 1
+#define LEFT 1
+#define RIGHT -1
+#define STRAIGHT 0
 
 typedef struct ball_s Ball;
 
