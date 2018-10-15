@@ -56,13 +56,8 @@ void run(Game* game)
     static bool displaying_score = false;
 
 
-    // If ball goes to either end increase score or send ball
-    if (ball->col == 0 && ball->movement_dir == AWAY) {
-        ball->state = false;
-        ball->movement_dir = STOPPED; // Stop moving
-        send_ball(ball);
-        game->wait_turn = true;
-    } else if (ball->col == 4) {
+    // If ball goes to end increase score
+    if (ball->col == 4) {
         game->their_score++;
         if (game->their_score != 3) {  // Check wasn't winning point
             displaying_score = true;
@@ -131,7 +126,13 @@ static void ball_move_task (void *data)
     Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
 
-    if (game->start) {
+    // If ball is moving off screen, send ball
+    if (ball->col == 0 && ball->movement_dir == AWAY) {
+        ball->state = false;
+        ball->movement_dir = STOPPED; // Stop moving
+        send_ball(ball);
+        game->wait_turn = true;
+    } else if (game->start) { // Else move normally
         move_ball(ball, paddle);
     }
 }
