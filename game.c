@@ -56,8 +56,9 @@ void run(Game* game)
     static bool reset = false;
     static bool displaying_score = false;
     static int counter = 0;
+    static int num_passes = 0;
 
-    if (counter == GAME_UPDATE/BALL_MOVE_RATE) {
+    if (counter == GAME_UPDATE/ball->move_rate) {
         counter = 0;
     // If ball is moving off screen, send ball
         if (ball->col == 0 && ball->movement_dir == AWAY) {
@@ -65,6 +66,7 @@ void run(Game* game)
             ball->movement_dir = STOPPED; // Stop moving
             send_ball(ball);
             game->wait_turn = true;
+            num_passes++;
         } else if (game->start) { // Else move normally
             move_ball(ball, paddle);
         }
@@ -113,6 +115,7 @@ void run(Game* game)
         if (reply == 1) {
             ball->state = true;
             ball->movement_dir = TOWARDS;
+            num_passes++;
             reply = 0;
         }
     }
@@ -129,6 +132,11 @@ void run(Game* game)
                 ball->state = true;
             }
         }
+    }
+    // Increase speed after some number of passes
+    if (num_passes == 6 && ball->move_rate < 6) {
+        num_passes = 0;
+        ball->move_rate++;
     }
     counter++;
 }
