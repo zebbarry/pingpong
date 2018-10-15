@@ -65,16 +65,8 @@ void move_ball (Ball* ball, Paddle* paddle)
     if (ball->state) {
         ball->prev_row = ball->row;
         ball->prev_col = ball->col;
-        if (ball->movement_dir == AWAY) {
-            ball->col--;
-        } else if (ball->movement_dir == TOWARDS) {
-            ball->col++;
-        }
-        if (ball->angle == LEFT) {
-            ball->row++;
-        } else if (ball->angle == RIGHT) {
-            ball->row--;
-        }
+        ball->col += ball->movement_dir;
+        ball->row += ball->angle;
         if (ball->col == 3 && ball->movement_dir == TOWARDS) {
             check_paddle_collision(ball, paddle);
         }

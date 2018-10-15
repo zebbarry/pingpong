@@ -12,7 +12,7 @@
 #include "led.h"
 
 
-#define BALL_MOVE_RATE 4
+#define BALL_MOVE_RATE 3
 #define DISPLAY_REFRESH 100
 #define GAME_UPDATE 250
 

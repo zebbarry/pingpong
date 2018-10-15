@@ -44,7 +44,7 @@ void send_ball(Ball* ball)
         while (!ir_uart_write_finished_p()) {
             continue;
         }
-        mirror_row = abs(ball->row - 6);
+        mirror_row = abs(ball->row + ball->angle - 6);
         ir_uart_putc(mirror_row);
         while (!ir_uart_write_finished_p()) {
             continue;

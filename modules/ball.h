@@ -10,12 +10,12 @@
 #include "system.h"
 #include "paddle.h"
 
+#define STOPPED 0
 #define TOWARDS 1
 #define AWAY -1
-#define STOPPED 0
+#define STRAIGHT 0
 #define LEFT 1
 #define RIGHT -1
-#define STRAIGHT 0
 
 typedef struct ball_s Ball;
 
