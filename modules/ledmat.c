@@ -62,10 +62,11 @@ void ledmat_display_column (uint8_t pattern, uint8_t col)
 // Clear display
 void ledmat_clear(void)
 {
-    for (int i = 0; i < LEDMAT_ROWS_NUM; i++) {
+    int i = 0;
+    for (i = 0; i < LEDMAT_ROWS_NUM; i++) {
         pio_output_high(ledmat_rows[i]);
     }
-    for (int i = 0; i < LEDMAT_COLS_NUM; i++) {
+    for (i = 0; i < LEDMAT_COLS_NUM; i++) {
         pio_output_high(ledmat_cols[i]);
     }
 }
