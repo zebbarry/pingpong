@@ -50,7 +50,7 @@ bool start_sequence(Game* game)
 }
 
 
-bool run(Game* game, bool wait_for_turn)
+void run(Game* game, bool game->wait_turn)
 {
     Ball* ball = game->ball;
     static int reply = 0;
@@ -64,7 +64,7 @@ bool run(Game* game, bool wait_for_turn)
         ball->state = false;
         ball->movement_dir = STOPPED; // Stop moving
         send_ball(ball);
-        wait_for_turn = true;
+        game->wait_turn = true;
     } else if (ball->col == 4 && !game_over) {
         game->their_score++;
         if (game->their_score != 3) {  // Check wasn't winning point
@@ -76,7 +76,7 @@ bool run(Game* game, bool wait_for_turn)
 
 
     // Either wait for ball or update score
-    if (wait_for_turn && !game_over) {
+    if (game->wait_turn && !game_over) {
         reply = wait_for_reply(game);
     }
 
@@ -97,7 +97,7 @@ bool run(Game* game, bool wait_for_turn)
 
 
     if (reply) {
-        wait_for_turn = false;
+        game->wait_turn = false;
         // If score sent back show score unless game_over.
         if (reply == 2 && !game_over) {
             displaying_score = true;
@@ -138,7 +138,6 @@ bool run(Game* game, bool wait_for_turn)
             game->their_score = 0;
         }
     }
-    return wait_for_turn;
 }
 
 
@@ -186,16 +185,21 @@ static void display_task (void *data)
 void controller(void *data)
 {
     Game* game = data;
-    static bool wait_for_turn = false;
     bool begin_with_ball = false;
 
     if (!game->start) {
         begin_with_ball = start_sequence(game);
         if (game->start && !begin_with_ball) {
-            wait_for_turn = true;
+            game->wait_turn = true;
+            text_clear();
+            ledmat_clear();
+            game->show_text = false;
+            ball->state = true;
+            paddle_init(paddle);
+            paddle->state = true;
         }
     } else {
-        wait_for_turn = run(game, wait_for_turn);
+        run(game);
     }
 
     // If displaying text, update display
@@ -217,7 +221,8 @@ int main (void)
     paddle_init (&paddle);
     paddle.state = false;
 
-    Game game = {.ball = &ball, .paddle = &paddle, .your_score = 0, .their_score = 0, .start = false};
+    Game game;
+    game_init(&game);
 
     // Initialise system and set inital dot positions
     system_init ();

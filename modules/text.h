@@ -22,7 +22,10 @@ struct game_s
     int their_score;
     bool show_text;
     bool start;
+    bool wait_turn;
 };
+
+void game_init(Game* game);
 
 void start_screen(Game* game);
 

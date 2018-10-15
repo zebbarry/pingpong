@@ -20,6 +20,16 @@
 
 static int REFRESH_RATE = 0;
 
+void game_init(Game* game)
+{
+    game->ball = &ball;
+    game->paddle = &paddle;
+    game->your_score = 0;
+    game->their_score = 0;
+    game->start = false;
+    game->wait_turn = false;
+}
+
 
 void start_screen(Game* game)
 {

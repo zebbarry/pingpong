@@ -2,6 +2,12 @@ Who will start with the ball after a point is lost?
  - The player with the lowest score? (will have to remember the previous score, in case current score is tied)
  - Or the player who just lost (or won) the point? <-- I like this one, makes it easier and reflects how actual game is played.
 
+
+ Initialisation sequence:
+  - Both boards display "PONG" and wait to recieve_connection
+  - If NAVSWITCH_PUSH then board switches to send_connection and ball starts moving towards paddle
+  - 2nd board recieves connection and moves into wait_for_turn.
+
                                 !___________GAME_STATES____________!
 
 ----------------------------------------BALL ON MY SIDE--------------------------------------------
