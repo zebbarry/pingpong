@@ -51,18 +51,29 @@ bool start_sequence(Game* game)
 void run(Game* game)
 {
     Ball* ball = game->ball;
+    Paddle* paddle = game->paddle;
     static int reply = 0;
     static bool reset = false;
     static bool displaying_score = false;
+    static int counter = 0;
+    static int num_passes = 0;
 
+    if (counter == GAME_UPDATE/ball->move_rate) {
+        counter = 0;
+    // If ball is moving off screen, send ball
+        if (ball->col == 0 && ball->movement_dir == AWAY) {
+            ball->state = false;
+            ball->movement_dir = STOPPED; // Stop moving
+            send_ball(ball);
+            game->wait_turn = true;
+            num_passes++;
+        } else if (game->start) { // Else move normally
+            move_ball(ball, paddle);
+        }
+    }
 
-    // If ball goes to either end increase score or send ball
-    if (ball->col == 0 && ball->movement_dir == AWAY) {
-        ball->state = false;
-        ball->movement_dir = STOPPED; // Stop moving
-        send_ball(ball);
-        game->wait_turn = true;
-    } else if (ball->col == 4) {
+    // If ball goes to end increase score
+    if (ball->col == 4) {
         game->their_score++;
         if (game->their_score != 3) {  // Check wasn't winning point
             displaying_score = true;
@@ -104,6 +115,7 @@ void run(Game* game)
         if (reply == 1) {
             ball->state = true;
             ball->movement_dir = TOWARDS;
+            num_passes++;
             reply = 0;
         }
     }
@@ -121,6 +133,12 @@ void run(Game* game)
             }
         }
     }
+    // Increase speed after some number of passes
+    if (num_passes == 6 && ball->move_rate < 6) {
+        num_passes = 0;
+        ball->move_rate++;
+    }
+    counter++;
 }
 
 
@@ -131,7 +149,13 @@ static void ball_move_task (void *data)
     Paddle* paddle = game->paddle;
     Ball* ball = game->ball;
 
-    if (game->start) {
+    // If ball is moving off screen, send ball
+    if (ball->col == 0 && ball->movement_dir == AWAY) {
+        ball->state = false;
+        ball->movement_dir = STOPPED; // Stop moving
+        send_ball(ball);
+        game->wait_turn = true;
+    } else if (game->start) { // Else move normally
         move_ball(ball, paddle);
     }
 }
@@ -230,11 +254,11 @@ int main (void)
     score_init(GAME_UPDATE);
 
     // Define tasks to run
-    task_t tasks[3] =
+    task_t tasks[2] =
     {
         {.func = controller, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = display_task, .period = TASK_RATE / DISPLAY_REFRESH, .data = &game},
-        {.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
+        //{.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
     };
 
     // Show title
