@@ -56,7 +56,7 @@ void run(Game* game)
     static bool displaying_score = false;
     static int counter = 0;
     static int num_passes = 0;
-    static int move_rate = 0;
+    static int move_rate = 2;
 
     if (counter == GAME_UPDATE/move_rate) {
         counter = 0;
