@@ -40,7 +40,7 @@ void ledmat_init (void);
     @param col selected column.  */
 void ledmat_display_column (uint8_t pattern, uint8_t col);
 
-
+/** Clear ledmat display */
 void ledmat_clear(void);
 
 #endif

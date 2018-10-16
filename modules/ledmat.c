@@ -66,6 +66,7 @@ void ledmat_clear(void)
     for (i = 0; i < LEDMAT_ROWS_NUM; i++) {
         pio_output_high(ledmat_rows[i]);
     }
+    
     for (i = 0; i < LEDMAT_COLS_NUM; i++) {
         pio_output_high(ledmat_cols[i]);
     }
