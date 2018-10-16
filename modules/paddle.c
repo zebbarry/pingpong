@@ -55,26 +55,6 @@ void decrease_row (Paddle* paddle)
 }
 
 
-void increase_col (Paddle* paddle)
-{
-    if (paddle->col < 4) {
-        paddle->prev_col = paddle->col;
-        paddle->moved = true;
-        paddle->col++;
-    }
-}
-
-
-void decrease_col (Paddle* paddle)
-{
-    if (paddle->col > 0) {
-        paddle->prev_col = paddle->col;
-        paddle->moved = true;
-        paddle->col--;
-    }
-}
-
-
 // Update the led display to show the new paddle location
 void paddle_update(Paddle* paddle)
 {
