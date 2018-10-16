@@ -31,7 +31,7 @@ void game_init(Game* game)
 
 void start_screen(Game* game)
 {
-    char* message = "PONG";
+    char* message = "PUSH TO START";
     tinygl_clear();
     tinygl_text_speed_set(MESSAGE_RATE);
     tinygl_text_mode_set (TINYGL_TEXT_MODE_SCROLL);

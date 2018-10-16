@@ -194,7 +194,6 @@ static void display_task (void *data)
 void controller(void *data)
 {
     Game* game = data;
-    Ball* ball = game->ball;
     Paddle* paddle = game->paddle;
     bool begin_with_ball = false;
 

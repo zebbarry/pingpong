@@ -3,8 +3,8 @@
 ------------
 
 START:
-Board is ready to start a game when the words 'PONG' are scrolling
-across the screen. When with another board that also has "PONG" displaying,
+Board is ready to start a game when the words "PUSH TO START" are scrolling
+across the screen. When with another board that also has "PUSH TO START" displaying,
 press down the joystick button to start the game. You will start with the ball.
 
 CONTROL:
