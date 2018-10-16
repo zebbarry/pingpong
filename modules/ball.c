@@ -23,7 +23,6 @@ void ball_init (Ball* ball)
     ball->prev_col = 0;
     ball->angle = STRAIGHT; // Straight down
     ball->movement_dir = TOWARDS; // Towards
-    ball->move_rate = 2; // Slow starting speed
     ball->moved = false;
 }
 
