@@ -1,5 +1,5 @@
 /** @file paddle.c
- *  @author Zeb Barry
+ *  @author Zeb Barry, Max Harrison
  *  @date 8 October 2018
  *  @brief Paddle class
  *  @note Defines paddle for game of pong.
@@ -8,6 +8,7 @@
 #include "system.h"
 #include "pio.h"
 #include "ledmat.h"
+#include "ledscreen.h"
 #include "paddle.h"
 #include <stdbool.h>
 

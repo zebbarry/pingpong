@@ -1,5 +1,5 @@
 /** @file ball.h
- *  @author Max Harrison
+ *  @author Max Harrison, Zeb Barry
  *  @date 8 October 2018
  *  @brief Ball class header
  */
@@ -10,8 +10,8 @@
 #include "system.h"
 #include "paddle.h"
 
-#define STOPPED 0
 #define TOWARDS 1
+#define STOPPED 0
 #define AWAY -1
 #define STRAIGHT 0
 #define LEFT 1

@@ -1,5 +1,5 @@
 /** @file display.c
- *  @author Zeb Barry
+ *  @author Zeb Barry, Max Harrison
  *  @date 9 October 2018
  *  @brief Show score and end game
  *  @note Dispays score and other text.
@@ -10,6 +10,7 @@
 #include "modules/transfer.h"
 #include "modules/paddle.h"
 #include "modules/ball.h"
+#include "modules/pong.h"
 #include "tinygl.h"
 #include "../fonts/font3x5_1.h"
 #include <stdio.h>
@@ -19,15 +20,6 @@
 #define MESSAGE_RATE 10
 
 static int REFRESH_RATE = 0;
-
-void game_init(Game* game)
-{
-    game->your_score = 0;
-    game->their_score = 0;
-    game->start = false;
-    game->wait_turn = false;
-}
-
 
 void start_screen(Game* game)
 {

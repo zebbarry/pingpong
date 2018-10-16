@@ -1,5 +1,5 @@
 /** @file transfer.h
- *  @author Zeb Barry
+ *  @author Zeb Barry, Max Harrison
  *  @date 8 October 2018
  *  @brief Communications header
  */
@@ -9,7 +9,7 @@
 
 #include "system.h"
 #include "ball.h"
-#include "text.h"
+#include "pong.h"
 #include <stdbool.h>
 
 // Initialises infra-red transmitter

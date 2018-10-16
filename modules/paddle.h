@@ -1,5 +1,5 @@
 /** @file paddle.h
- *  @author Zeb Barry
+ *  @author Zeb Barry, Max Harrison
  *  @date 8 October 2018
  *  @brief Paddle class header
  */

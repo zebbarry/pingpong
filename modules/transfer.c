@@ -1,5 +1,5 @@
 /** @file transfer.c
- *  @author Zeb Barr
+ *  @author Zeb Barry, Max Harrison
  *  @date 9 October 2018
  *  @brief Transfer between boards
  *  @note Module for transmitting ball position and score between boards.
@@ -9,7 +9,7 @@
 #include "ir_uart.h"
 #include "modules/paddle.h"
 #include "modules/ball.h"
-#include "modules/text.h"
+#include "modules/pong.h"
 #include <stdbool.h>
 #include <stdlib.h>
 

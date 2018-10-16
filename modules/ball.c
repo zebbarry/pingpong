@@ -1,5 +1,5 @@
 /** @file ball.c
- *  @author Max Harrison
+ *  @author Max Harrison, Zeb Barry
  *  @date 8 October 2018
  *  @brief Ball class
  *  @note Defines ball for game of pong.
@@ -7,7 +7,8 @@
 
 #include "system.h"
 #include "pio.h"
-#include "modules/ledmat.h"
+#include "ledmat.h"
+#include "ledscreen.h"
 #include "ball.h"
 #include "paddle.h"
 #include <stdbool.h>

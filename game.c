@@ -3,11 +3,12 @@
 #include "pio.h"
 #include "navswitch.h"
 #include "task.h"
-#include "modules/ledmat.h"
+#include "ledscreen.h"
+#include "pong.h"
 #include "paddle.h"
 #include "ball.h"
 #include "transfer.h"
-#include "text.h"
+#include "modules/text.h"
 #include <stdbool.h>
 
 // Frequncy (Hz) that each task is called
