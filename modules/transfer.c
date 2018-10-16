@@ -45,6 +45,8 @@ void send_ball(Ball* ball)
         while (!ir_uart_write_finished_p()) {
             continue;
         }
+
+        // Reflect row
         mirror_row = abs(ball->row + ball->angle - 6);
         ir_uart_putc(mirror_row);
         while (!ir_uart_write_finished_p()) {
@@ -55,6 +57,7 @@ void send_ball(Ball* ball)
             continue;
         }
 
+        // Invert angle if sent into edge columns
         if (mirror_row == 0 || mirror_row == 6) {
             mirror_angle = mirror_angle * -1;
         }

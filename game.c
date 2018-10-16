@@ -12,7 +12,6 @@
 #include "led.h"
 
 
-#define BALL_MOVE_RATE 3
 #define DISPLAY_REFRESH 100
 #define GAME_UPDATE 250
 
@@ -57,8 +56,9 @@ void run(Game* game)
     static bool displaying_score = false;
     static int counter = 0;
     static int num_passes = 0;
+    static int move_rate = 0;
 
-    if (counter == GAME_UPDATE/ball->move_rate) {
+    if (counter == GAME_UPDATE/move_rate) {
         counter = 0;
         // If ball is moving off screen, send ball
         if (ball->col == 0 && ball->movement_dir == AWAY) {
@@ -124,6 +124,8 @@ void run(Game* game)
     if (displaying_score) {
         reset = show_score(game);
         if (reset) {
+            num_passes = 0;
+            move_rate = 2;
             displaying_score = false;
             reply = 0;
             ledmat_clear();
@@ -134,9 +136,9 @@ void run(Game* game)
         }
     }
     // Increase speed after some number of passes
-    if (num_passes == 6 && ball->move_rate < 6) {
+    if (num_passes == 6 && move_rate < 6) {
         num_passes = 0;
-        ball->move_rate++;
+        move_rate++;
     }
     counter++;
 }
@@ -239,7 +241,6 @@ int main (void)
     {
         {.func = controller, .period = TASK_RATE / GAME_UPDATE, .data = &game},
         {.func = display_task, .period = TASK_RATE / DISPLAY_REFRESH, .data = &game},
-        //{.func = ball_move_task, .period = TASK_RATE / BALL_MOVE_RATE, .data = &game},
     };
 
     // Show title
