@@ -95,12 +95,16 @@ void run(Game* game)
         ball_init(ball);
         game->start = false;
         reply = 0;
+        num_passes = 0;
+        move_rate = 2;
     } else if (game->their_score == 3) {
         send_score(game);
         show_loss(game);
         ball_init(ball);
         game->start = false;
         reply = 0;
+        num_passes = 0;
+        move_rate = 2;
     }
 
     if (reply) {
