@@ -10,7 +10,6 @@
 #include "system.h"
 #include "paddle.h"
 
-#define STOPPED 0
 #define TOWARDS 1
 #define AWAY -1
 #define STRAIGHT 0
@@ -44,7 +43,5 @@ void check_wall_collision(Ball* ball);
 void ball_update (Ball* ball);
 
 void ball_off(Ball* ball);
-
-void ball_on(Ball* ball);
 
 #endif
