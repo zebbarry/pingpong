@@ -1,31 +1,15 @@
 /** @file display.h
- *  @author Zeb Barry
+ *  @author Zeb Barry, Max Harrison
  *  @date 9 October 2018
  *  @brief Display module for pong.
  */
 
-#ifndef SCORE_H
-#define SCORE_H
+#ifndef TEXT_H
+#define TEXT_H
 
 #include "system.h"
-#include "paddle.h"
-#include "ball.h"
+#include "modules/pong.h"
 #include <stdbool.h>
-
-typedef struct game_s Game;
-
-struct game_s
-{
-    Paddle* paddle;
-    Ball* ball;
-    int your_score;
-    int their_score;
-    bool show_text;
-    bool start;
-    bool wait_turn;
-};
-
-void game_init(Game* game);
 
 void start_screen(Game* game);
 

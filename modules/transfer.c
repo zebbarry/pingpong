@@ -1,5 +1,5 @@
 /** @file transfer.c
- *  @author Zeb Barr
+ *  @author Zeb Barry, Max Harrison
  *  @date 9 October 2018
  *  @brief Transfer between boards
  *  @note Module for transmitting ball position and score between boards.
@@ -9,17 +9,19 @@
 #include "ir_uart.h"
 #include "modules/paddle.h"
 #include "modules/ball.h"
-#include "modules/text.h"
+#include "modules/pong.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
 
+// Initialises infra-red transmitter
 void transfer_init(void)
 {
     ir_uart_init();
 }
 
 
+// Sends score to other board
 void send_score(Game* game)
 {
     if (ir_uart_write_ready_p()) {
@@ -36,6 +38,7 @@ void send_score(Game* game)
 }
 
 
+// Sends ball to other board, calculating mirrored row and angle
 void send_ball(Ball* ball)
 {
     int mirror_row = 0;
@@ -65,16 +68,19 @@ void send_ball(Ball* ball)
     }
 }
 
-// 0 for noreply, 1 for ball, 2 for score.
+// Checks for reply, returning 0 for no reply, 1 for ball and 2 for score
+// Updates score or ball position and angle based on reply
 int wait_for_reply(Game* game)
 {
     Ball* ball = game->ball;
     char reply;
     int result = 0;
 
+    // Check for reply
     if (ir_uart_read_ready_p()) {
         reply = ir_uart_getc();
 
+        // If ball is about to be sent, recieve ball data
         if (reply == 'B') {
             result = 1;
             while (!ir_uart_read_ready_p()) {
@@ -90,7 +96,7 @@ int wait_for_reply(Game* game)
             }
             ball->angle = ir_uart_getc();
 
-        } else if (reply == 'S') {
+        } else if (reply == 'S') { // Otherwise if score sent back switch scores.
             result = 2;
             while (!ir_uart_read_ready_p()) {
                 continue;
@@ -106,6 +112,8 @@ int wait_for_reply(Game* game)
     return result;
 }
 
+
+//  Initial recieve state waiting for a second board to send start command
 bool recieve_connection(void)
 {
     bool result = false;
@@ -119,6 +127,8 @@ bool recieve_connection(void)
     return result;
 }
 
+
+// Sends start command to second board
 void send_connection(void)
 {
     ir_uart_putc('Y');

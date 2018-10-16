@@ -1,5 +1,5 @@
 /** @file ball.c
- *  @author Max Harrison
+ *  @author Max Harrison, Zeb Barry
  *  @date 8 October 2018
  *  @brief Ball class
  *  @note Defines ball for game of pong.
@@ -7,7 +7,8 @@
 
 #include "system.h"
 #include "pio.h"
-#include "modules/ledmat.h"
+#include "ledmat.h"
+#include "ledscreen.h"
 #include "ball.h"
 #include "paddle.h"
 #include <stdbool.h>
@@ -50,7 +51,7 @@ void check_paddle_collision(Ball* ball, Paddle* paddle)
     }
 }
 
-// Move the ball one step.
+// Move the ball one step as long as state is true
 void move_ball (Ball* ball, Paddle* paddle)
 {
     if (ball->state) {
@@ -66,7 +67,7 @@ void move_ball (Ball* ball, Paddle* paddle)
     }
 }
 
-// sets ball position to row 3, col 0
+// Sets ball position to the middle top of the display
 void ball_reset_pos(Ball* ball) {
     ball->prev_row = ball->row;
     ball->prev_col = ball->col;
@@ -96,19 +97,9 @@ void ball_update(Ball* ball)
 
 }
 
-
+// Turn off ball on display
 void ball_off(Ball* ball)
 {
     pio_output_high(ledmat_rows[ball->row]);
     pio_output_high(ledmat_cols[ball->col]);
-}
-
-
-
-void ball_on(Ball* ball)
-{
-    if (ball->state) {
-        pio_output_low(ledmat_rows[ball->row]);
-        pio_output_low(ledmat_cols[ball->col]);
-    }
 }

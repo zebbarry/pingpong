@@ -19,22 +19,28 @@ all: game.out
 game.o: game.c ../../drivers/avr/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
+pong.o: modules/pong.c modules/paddle.h modules/ball.h ../../drivers/avr/system.h modules/pong.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
 pio.o: ../../drivers/avr/pio.c ../../drivers/avr/system.h ../../drivers/avr/pio.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 system.o: ../../drivers/avr/system.c ../../drivers/avr/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-ledmat.o: modules/ledmat.c ../../drivers/avr/pio.h ../../drivers/avr/system.h modules/ledmat.h
+ledmat.o: ../../drivers/ledmat.c ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/ledmat.h
+	$(CC) -c $(CFLAGS) $< -o $@
+
+ledscreen.o: modules/ledscreen.c ../../drivers/avr/pio.h ../../drivers/ledmat.h ../../drivers/avr/system.h modules/ledscreen.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 navswitch.o: ../../drivers/navswitch.c ../../drivers/avr/delay.h ../../drivers/avr/pio.h ../../drivers/avr/system.h ../../drivers/navswitch.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-paddle.o: modules/paddle.c ../../drivers/avr/pio.h modules/ledmat.h ../../drivers/avr/system.h modules/paddle.h
+paddle.o: modules/paddle.c ../../drivers/avr/pio.h modules/ledscreen.h ../../drivers/ledmat.h ../../drivers/avr/system.h modules/paddle.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-ball.o: modules/ball.c ../../drivers/avr/pio.h modules/ledmat.h ../../drivers/avr/system.h modules/ball.h
+ball.o: modules/ball.c ../../drivers/avr/pio.h modules/ledscreen.h ../../drivers/ledmat.h ../../drivers/avr/system.h modules/ball.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 task.o: ../../utils/task.c ../../drivers/avr/system.h ../../drivers/avr/timer.h ../../utils/task.h
@@ -43,13 +49,13 @@ task.o: ../../utils/task.c ../../drivers/avr/system.h ../../drivers/avr/timer.h 
 timer.o: ../../drivers/avr/timer.c ../../drivers/avr/system.h ../../drivers/avr/timer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-transfer.o: modules/transfer.c ../../drivers/avr/system.h modules/ball.h modules/paddle.h modules/text.h ../../drivers/avr/ir_uart.h modules/transfer.h
+transfer.o: modules/transfer.c ../../drivers/avr/system.h modules/ball.h modules/paddle.h modules/pong.h ../../drivers/avr/ir_uart.h modules/transfer.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 font.o: ../../utils/font.c ../../drivers/avr/system.h ../../utils/font.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-text.o: modules/text.c modules/ball.h modules/paddle.h modules/transfer.h ../../utils/tinygl.h ../../drivers/avr/system.h modules/text.h
+text.o: modules/text.c modules/ball.h modules/paddle.h modules/pong.h modules/transfer.h ../../utils/tinygl.h ../../drivers/avr/system.h modules/text.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 usart1.o: ../../drivers/avr/usart1.c ../../drivers/avr/system.h ../../drivers/avr/usart1.h
@@ -70,11 +76,8 @@ display.o: ../../drivers/display.c ../../drivers/avr/system.h ../../drivers/disp
 prescale.o: ../../drivers/avr/prescale.c ../../drivers/avr/prescale.h ../../drivers/avr/system.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
-led.o: ../../drivers/led.c ../../drivers/avr/system.h ../../drivers/avr/pio.h ../../drivers/led.h
-	$(CC) -c $(CFLAGS) $< -o $@
-
 # Link: create ELF output file from object files.
-game.out: game.o pio.o system.o ledmat.o navswitch.o paddle.o ball.o task.o timer.o transfer.o display.o font.o usart1.o ir_uart.o timer0.o tinygl.o text.o prescale.o led.o
+game.out: game.o pio.o system.o pong.o ledmat.o ledscreen.o navswitch.o paddle.o ball.o task.o timer.o transfer.o display.o font.o usart1.o ir_uart.o timer0.o tinygl.o text.o prescale.o
 	$(CC) $(CFLAGS) $^ -o $@ -lm
 	$(SIZE) $@
 
