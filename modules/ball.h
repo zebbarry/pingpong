@@ -41,7 +41,6 @@ void ball_reset_pos(Ball* ball);
 
 void check_paddle_collision(Ball* ball, Paddle* paddle);
 void check_wall_collision(Ball* ball);
-void check_end_collision(Ball* ball);
 
 void ball_update (Ball* ball);
 

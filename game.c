@@ -60,7 +60,7 @@ void run(Game* game)
 
     if (counter == GAME_UPDATE/ball->move_rate) {
         counter = 0;
-    // If ball is moving off screen, send ball
+        // If ball is moving off screen, send ball
         if (ball->col == 0 && ball->movement_dir == AWAY) {
             ball->state = false;
             ball->movement_dir = STOPPED; // Stop moving
@@ -139,25 +139,6 @@ void run(Game* game)
         ball->move_rate++;
     }
     counter++;
-}
-
-
-
-static void ball_move_task (void *data)
-{
-    Game* game = data;
-    Paddle* paddle = game->paddle;
-    Ball* ball = game->ball;
-
-    // If ball is moving off screen, send ball
-    if (ball->col == 0 && ball->movement_dir == AWAY) {
-        ball->state = false;
-        ball->movement_dir = STOPPED; // Stop moving
-        send_ball(ball);
-        game->wait_turn = true;
-    } else if (game->start) { // Else move normally
-        move_ball(ball, paddle);
-    }
 }
 
 

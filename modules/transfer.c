@@ -39,6 +39,7 @@ void send_score(Game* game)
 void send_ball(Ball* ball)
 {
     int mirror_row = 0;
+    int mirror_angle = -1 * ball->angle;
     if (ir_uart_write_ready_p()) {
         ir_uart_putc('B');
         while (!ir_uart_write_finished_p()) {
@@ -53,7 +54,11 @@ void send_ball(Ball* ball)
         while (!ir_uart_write_finished_p()) {
             continue;
         }
-        ir_uart_putc(-1 * ball->angle);
+
+        if (mirror_row == 0 || mirror_row == 6) {
+            mirror_angle = mirror_angle * -1;
+        }
+        ir_uart_putc(mirror_angle);
     }
 }
 

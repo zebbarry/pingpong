@@ -37,15 +37,6 @@ void check_wall_collision(Ball* ball)
     }
 }
 
-void check_end_collision(Ball* ball)
-{
-    if (ball->col == 0) {        // Far end
-        ball->movement_dir = TOWARDS;
-    } else if (ball->col == 4) { // Paddle end
-        ball->movement_dir = AWAY;
-    }
-}
-
 void check_paddle_collision(Ball* ball, Paddle* paddle)
 {
     if (ball->row == paddle->rows[0]) {
@@ -72,7 +63,6 @@ void move_ball (Ball* ball, Paddle* paddle)
             check_paddle_collision(ball, paddle);
         }
         check_wall_collision(ball);
-        //check_end_collision(ball);
         ball->moved = true;
     }
 }
