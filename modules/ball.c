@@ -27,6 +27,7 @@ void ball_init (Ball* ball)
     ball->moved = false;
 }
 
+
 // Checks if ball will hit a wall, changes angle if so
 void check_wall_collision(Ball* ball)
 {
@@ -36,6 +37,7 @@ void check_wall_collision(Ball* ball)
         ball->angle = RIGHT;
     }
 }
+
 
 // Check if ball will collide with the baddle, if so, change direction.
 void check_paddle_collision(Ball* ball, Paddle* paddle)
@@ -51,6 +53,7 @@ void check_paddle_collision(Ball* ball, Paddle* paddle)
         ball->movement_dir = AWAY;
     }
 }
+
 
 // Move the ball one step as long as state is true
 void move_ball (Ball* ball, Paddle* paddle)
@@ -79,6 +82,7 @@ void ball_reset_pos(Ball* ball) {
     ball->angle = STRAIGHT;
 }
 
+
 // Update display to show new ball position.
 void ball_update(Ball* ball)
 {
@@ -95,8 +99,8 @@ void ball_update(Ball* ball)
         pio_output_high(ledmat_rows[ball->row]);
         pio_output_high(ledmat_cols[ball->col]);
     }
-
 }
+
 
 // Turn off ball on display
 void ball_off(Ball* ball)

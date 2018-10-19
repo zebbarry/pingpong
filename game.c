@@ -45,10 +45,10 @@ bool start_sequence(Game* game)
             game->start = recieve_connection();
         }
     }
-
-
     return start_with_ball;
 }
+
+
 
 
 /* Operates game functionality such as moving ball, keeping track of score and
@@ -160,6 +160,8 @@ void run(Game* game)
     }
     counter++;
 }
+
+
 
 
 // Task for alternating display of paddle and ball and moving paddle location

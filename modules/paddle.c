@@ -26,7 +26,6 @@ void paddle_init (Paddle* paddle)
 }
 
 
-
 // Move the paddles location up and down the display.
 void increase_row (Paddle* paddle)
 {
