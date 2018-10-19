@@ -71,7 +71,7 @@ void paddle_update(Paddle* paddle)
     }
 }
 
-
+// Turns paddle on and off from being displayed
 void paddle_on(Paddle* paddle)
 {
     pio_output_low(ledmat_rows[paddle->rows[0]]);

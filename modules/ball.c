@@ -27,7 +27,7 @@ void ball_init (Ball* ball)
     ball->moved = false;
 }
 
-
+// Checks if ball will hit a wall, changes angle if so
 void check_wall_collision(Ball* ball)
 {
     if (ball->row == 0) {        // Righthand wall
@@ -37,6 +37,7 @@ void check_wall_collision(Ball* ball)
     }
 }
 
+// Check if ball will collide with the baddle, if so, change direction.
 void check_paddle_collision(Ball* ball, Paddle* paddle)
 {
     if (ball->row == paddle->rows[0]) {

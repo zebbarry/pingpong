@@ -34,15 +34,21 @@ struct ball_s
 
 void ball_init (Ball* ball);
 
-// Move the ball one step.
+// Move the ball one step as long as state is true
 void move_ball (Ball* ball, Paddle* paddle);
+
+// Sets ball position to the middle top of the display
 void ball_reset_pos(Ball* ball);
 
+// Check if ball will collide with the baddle, if so, change direction.
 void check_paddle_collision(Ball* ball, Paddle* paddle);
+
+// Checks if ball will hit a wall, changes angle if so
 void check_wall_collision(Ball* ball);
 
+// Update display to show new ball position.
 void ball_update (Ball* ball);
-
+// Turn off ball on display
 void ball_off(Ball* ball);
 
 #endif

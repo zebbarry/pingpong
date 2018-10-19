@@ -21,6 +21,7 @@
 
 static int REFRESH_RATE = 0;
 
+// Displays the start screen rolling text
 void start_screen(Game* game)
 {
     char* message = "PUSH TO START";
@@ -31,7 +32,7 @@ void start_screen(Game* game)
     game->show_text = true;
 }
 
-
+// Initialiser
 void score_init(int update_rate)
 {
     REFRESH_RATE = update_rate;
@@ -41,7 +42,7 @@ void score_init(int update_rate)
     tinygl_text_dir_set (TINYGL_TEXT_DIR_ROTATE);
 }
 
-
+// Shows the current scores for each player on the screen
 bool show_score(Game* game)
 {
     bool finished = false;
@@ -50,8 +51,8 @@ bool show_score(Game* game)
     Paddle* paddle = game->paddle;
     if (!game->show_text) {
         game->show_text = true;
-        paddle->state = false;
-        paddle_off(paddle);
+        paddle->state = false; // Disabling ball and paddle while
+        paddle_off(paddle);    // displaying text
         ball->state = false;
         ball_off(ball);
         counter = 0;
@@ -79,7 +80,7 @@ bool show_score(Game* game)
     return finished;
 }
 
-
+// Shows the winning message and disables ball and paddle
 void show_win(Game* game)
 {
     Paddle* paddle = game->paddle;
@@ -102,7 +103,7 @@ void show_win(Game* game)
 }
 
 
-
+// Shows the losing message and disables ball and paddle
 void show_loss(Game* game)
 {
     Paddle* paddle = game->paddle;
@@ -123,13 +124,13 @@ void show_loss(Game* game)
     tinygl_text(message);
 }
 
-
+// Calls tinygl update
 void text_update(void)
 {
     tinygl_update();
 }
 
-
+// clearn text being displayed
 void text_clear(void)
 {
     tinygl_clear();

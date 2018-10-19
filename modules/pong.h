@@ -21,10 +21,10 @@
      int their_score;
      bool show_text;
      bool start;
-     bool wait_turn;
+     bool wait_turn; // True if ball isn't on screen
  };
 
-
+/** Initialises a game **/
  void game_init(Game* game);
 
 #endif

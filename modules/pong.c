@@ -10,6 +10,7 @@
 #include "paddle.h"
 #include "ball.h"
 
+/** Initialises a game **/
  void game_init(Game* game)
  {
      game->your_score = 0;
